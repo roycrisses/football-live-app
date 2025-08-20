@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { TrendingUp, Clock, Users, AlertCircle, RefreshCw, Zap } from 'lucide-react';
 
@@ -45,7 +45,8 @@ function App() {
     }
   ];
 
-  const fetchMatches = async () => {
+  // FIXED: Wrap fetchMatches in useCallback to prevent infinite re-renders
+  const fetchMatches = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -74,16 +75,16 @@ function App() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []); // Empty dependency array since it doesn't depend on any state/props
 
   useEffect(() => {
-    // OPTIMIZED: Load immediately, then set up refresh
+    // FIXED: Now fetchMatches is stable and won't cause infinite re-renders
     fetchMatches();
     
     // Auto-refresh every 30 seconds
     const interval = setInterval(fetchMatches, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchMatches]); // Include fetchMatches in dependencies
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -135,7 +136,7 @@ function App() {
             </div>
             
             <button
-              onClick={fetchMatches}
+              onClick={() => fetchMatches()} // Use the defined fetchMatches
               disabled={loading}
               className="flex items-center space-x-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all duration-200 hover:scale-105 no-print"
             >
