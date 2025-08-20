@@ -54,19 +54,22 @@ function App() {
       setLoading(true);
       setError(null);
       
-      // Try to fetch from Netlify function, fallback to mock data
+      // FIXED: Call Netlify function instead of external API
       try {
-        const response = await axios.get(`${API_URL}/matches`, {
-          headers: { 'X-Auth-Token': API_KEY }
-        });
-        setMatches(response.data);
+        const response = await axios.get('/.netlify/functions/live-matches');
+        if (response.data && response.data.length > 0) {
+          setMatches(response.data);
+        } else {
+          setMatches(mockMatches);
+        }
       } catch (apiError) {
-        console.log('API not available, using mock data:', apiError.message);
+        console.log('Netlify function not available, using mock data:', apiError.message);
         setMatches(mockMatches);
       }
       
       setLastUpdated(new Date());
     } catch (err) {
+      console.error('Fetch error:', err);
       setError('Failed to fetch live matches');
       setMatches(mockMatches); // Fallback to mock data
     } finally {

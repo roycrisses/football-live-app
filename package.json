@@ -35,6 +35,12 @@
         ]
     },
     "devDependencies": {
-        "@babel/core": "^7.28.3"
+        "@babel/core": "^7.28.3",
+        "@babel/eslint-parser": "^7.28.0",
+        "@babel/preset-react": "^7.27.1",
+        "eslint": "^8.57.1",
+        "eslint-config-react-app": "^7.0.1",
+        "eslint-plugin-react": "^7.37.5",
+        "eslint-plugin-react-hooks": "^5.2.0"
     }
 }
