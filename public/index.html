@@ -8,14 +8,19 @@
     
     <title>🔥 Trending Live Football</title>
     
-    <!-- OPTIMIZED: Use faster Tailwind CDN -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7749661318330944"
+     crossorigin="anonymous"></script>
     
-    <!-- OPTIMIZED: Preload critical fonts -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" as="style">
+    <!-- Use Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- OPTIMIZED: Inline critical CSS -->
+    <!-- Inline critical CSS -->
     <style>
       /* Critical CSS for immediate display */
       body {
@@ -52,6 +57,29 @@
       @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
+      }
+      
+      /* AdSense responsive styles */
+      .ad-container {
+        text-align: center;
+        margin: 1rem 0;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .ad-container ins {
+        display: block;
+        margin: 0 auto;
+      }
+      
+      /* Responsive ad sizing */
+      @media (max-width: 768px) {
+        .ad-container {
+          margin: 0.5rem 0;
+          padding: 0.5rem;
+        }
       }
     </style>
   </head>
