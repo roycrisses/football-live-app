@@ -1,48 +1,43 @@
-// Netlify Function for Live Football Data Integration
+// Netlify Function for Live Football Data Integration using Google SERP API
 const axios = require('axios');
 
 exports.handler = async function(event, context) {
   try {
     // Get API credentials from Netlify environment variables
-    const API_KEY = process.env.FOOTBALL_API_KEY || 'c9d25c4d28ab4518ad9ffeaa7e937189';
-    const API_URL = process.env.FOOTBALL_API_URL || 'https://api.football-data.org/v4';
+    const SERP_API_KEY = process.env.SERP_API_KEY || '054e397d6bcbbb01784669bc5ccf4e50f889790c8b998bebdf06664ee711b4fc';
+    const SERP_API_URL = 'https://serpapi.com/search.json';
     
-    // Fetch live matches from Football-Data.org API
-    const response = await axios.get(`${API_URL}/matches?status=LIVE`, {
-      headers: {
-        'X-Auth-Token': API_KEY,
-        'Content-Type': 'application/json'
+    // Search for live football matches using Google SERP API
+    const searchQuery = 'live football matches today live scores';
+    
+    const response = await axios.get(SERP_API_URL, {
+      params: {
+        api_key: SERP_API_KEY,
+        q: searchQuery,
+        engine: 'google',
+        num: 20, // Get more results to filter
+        gl: 'us', // Location for better results
+        hl: 'en', // Language
+        tbm: 'nws' // News tab for live updates
       },
-      timeout: 10000 // 10 second timeout
+      timeout: 15000 // 15 second timeout for SERP API
     });
     
-    // Transform API data to match your app's format with win ratio predictions
+    console.log('SERP API response received');
+    
+    // Transform SERP API data to match your app's format
     let matches = [];
     
-    if (response.data && response.data.matches && response.data.matches.length > 0) {
-      // Transform API data
-      matches = response.data.matches.slice(0, 10).map(match => ({
-        id: match.id,
-        homeTeam: match.homeTeam.name,
-        awayTeam: match.awayTeam.name,
-        homeScore: match.score?.fullTime?.home || match.score?.halfTime?.home || 0,
-        awayScore: match.score?.fullTime?.away || match.score?.halfTime?.away || 0,
-        status: match.status,
-        minute: match.minute,
-        trendingScore: Math.floor(Math.random() * 30) + 70, // Enhanced trending score
-        league: match.competition?.name || 'Unknown League',
-        // AI-powered win ratio predictions based on team performance
-        homeWinRatio: Math.floor(Math.random() * 40) + 30,
-        awayWinRatio: Math.floor(Math.random() * 40) + 20,
-        drawRatio: Math.floor(Math.random() * 20) + 10
-      }));
+    if (response.data && response.data.news_results && response.data.news_results.length > 0) {
+      // Extract live match information from news results
+      matches = extractLiveMatchesFromSERP(response.data.news_results);
       
-      console.log(`API returned ${matches.length} matches`);
+      console.log(`SERP API extracted ${matches.length} live matches`);
     }
     
-    // If we don't have enough matches from API, use fallback data
-    if (matches.length < 10) {
-      console.log(`API returned insufficient matches (${matches.length}), using fallback data`);
+    // If we don't have enough matches from SERP API, use fallback data
+    if (matches.length < 8) {
+      console.log(`SERP API returned insufficient matches (${matches.length}), using fallback data`);
       matches = getFallbackMatches();
     }
     
@@ -57,7 +52,7 @@ exports.handler = async function(event, context) {
     };
     
   } catch (error) {
-    console.error('API Error:', error.message);
+    console.error('SERP API Error:', error.message);
     
     // Always return fallback data on error
     const fallbackMatches = getFallbackMatches();
@@ -73,6 +68,80 @@ exports.handler = async function(event, context) {
     };
   }
 };
+
+// Helper function to extract live matches from SERP API news results
+function extractLiveMatchesFromSERP(newsResults) {
+  const matches = [];
+  const processedTeams = new Set();
+  
+  for (const news of newsResults) {
+    if (matches.length >= 10) break; // Limit to 10 matches
+    
+    const title = news.title || '';
+    const snippet = news.snippet || '';
+    
+    // Look for live match patterns in news titles and snippets
+    const matchInfo = extractMatchFromText(title + ' ' + snippet);
+    
+    if (matchInfo && !processedTeams.has(matchInfo.teamKey)) {
+      processedTeams.add(matchInfo.teamKey);
+      
+      matches.push({
+        id: matches.length + 1,
+        homeTeam: matchInfo.homeTeam,
+        awayTeam: matchInfo.awayTeam,
+        homeScore: matchInfo.homeScore || 0,
+        awayScore: matchInfo.awayScore || 0,
+        status: matchInfo.status || 'LIVE',
+        minute: matchInfo.minute || Math.floor(Math.random() * 90) + 1,
+        trendingScore: Math.floor(Math.random() * 30) + 70,
+        league: matchInfo.league || 'Live Match',
+        homeWinRatio: Math.floor(Math.random() * 40) + 30,
+        awayWinRatio: Math.floor(Math.random() * 40) + 20,
+        drawRatio: Math.floor(Math.random() * 20) + 10
+      });
+    }
+  }
+  
+  return matches;
+}
+
+// Helper function to extract match information from text
+function extractMatchFromText(text) {
+  // Common patterns for live football matches
+  const patterns = [
+    // Pattern: "Team A vs Team B" or "Team A v Team B"
+    /([A-Z][a-zA-Z\s]+)\s+(?:vs?|v)\s+([A-Z][a-zA-Z\s]+)/i,
+    // Pattern: "Team A 2-1 Team B" (with scores)
+    /([A-Z][a-zA-Z\s]+)\s+(\d+)-(\d+)\s+([A-Z][a-zA-Z\s]+)/i,
+    // Pattern: "Team A beats Team B"
+    /([A-Z][a-zA-Z\s]+)\s+beats?\s+([A-Z][a-zA-Z\s]+)/i,
+    // Pattern: "Team A defeats Team B"
+    /([A-Z][a-zA-Z\s]+)\s+defeats?\s+([A-Z][a-zA-Z\s]+)/i
+  ];
+  
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (match) {
+      const homeTeam = match[1].trim();
+      const awayTeam = match[2].trim();
+      
+      // Skip if teams are too short or generic
+      if (homeTeam.length < 3 || awayTeam.length < 3) continue;
+      if (homeTeam.toLowerCase().includes('vs') || awayTeam.toLowerCase().includes('vs')) continue;
+      
+      return {
+        homeTeam,
+        awayTeam,
+        teamKey: `${homeTeam}-${awayTeam}`,
+        status: 'LIVE',
+        league: 'Live Match'
+      };
+    }
+  }
+  
+  return null;
+}
 
 // Helper function to get fallback matches
 function getFallbackMatches() {

@@ -375,7 +375,7 @@ function App() {
 
         {/* Top Ad Banner */}
         <AdBanner 
-          adSlot="5352978920" 
+          adSlot="6638140433" 
           className="mb-8" 
           fallback="🔥 Premium Football Content • Stay updated with live scores and predictions"
         />
@@ -467,7 +467,7 @@ function App() {
 
         {/* Middle Ad Banner */}
         <AdBanner 
-          adSlot="5352978920" 
+          adSlot="6638140433" 
           className="mb-8" 
           fallback="⚽ Live Match Updates • Get real-time scores and trending analysis"
         />
@@ -490,12 +490,12 @@ function App() {
         </div>
       </footer>
 
-      {/* Bottom Ad Banner */}
-      <AdBanner 
-        adSlot="5352978920" 
-        className="mt-8" 
-        fallback="🎯 Win Prediction Analytics • Advanced football insights and trends"
-      />
+              {/* Bottom Ad Banner */}
+        <AdBanner 
+          adSlot="6638140433" 
+          className="mt-8" 
+          fallback="🎯 Win Prediction Analytics • Advanced football insights and trends"
+        />
     </div>
   );
 }
