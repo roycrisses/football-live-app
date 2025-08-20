@@ -4,14 +4,10 @@ const axios = require('axios');
 exports.handler = async function(event, context) {
   try {
     // Get API credentials from Netlify environment variables
-    const API_KEY = process.env.FOOTBALL_API_KEY;
-    const API_URL = process.env.FOOTBALL_API_URL;
+    const API_KEY = process.env.FOOTBALL_API_KEY || 'c9d25c4d28ab4518ad9ffeaa7e937189';
+    const API_URL = process.env.FOOTBALL_API_URL || 'https://api.football-data.org/v4';
     
-    if (!API_KEY || !API_URL) {
-      throw new Error('Missing API credentials');
-    }
-    
-    // Fetch live matches from real API
+    // Fetch live matches from Football-Data.org API
     const response = await axios.get(`${API_URL}/matches?status=LIVE`, {
       headers: {
         'X-Auth-Token': API_KEY,
@@ -29,7 +25,7 @@ exports.handler = async function(event, context) {
       awayScore: match.score?.fullTime?.away || match.score?.halfTime?.away || 0,
       status: match.status,
       minute: match.minute,
-      trendingScore: Math.floor(Math.random() * 30) + 70, // Placeholder - replace with real trending data
+      trendingScore: Math.floor(Math.random() * 30) + 70, // Will be enhanced with real trending data
       league: match.competition?.name || 'Unknown League'
     }));
     
