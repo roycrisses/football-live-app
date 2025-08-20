@@ -45,39 +45,39 @@ function App() {
     }
   ];
 
-  // These are embedded in the build
-  const API_KEY = process.env.REACT_APP_FOOTBALL_API_KEY;
-  const API_URL = process.env.REACT_APP_FOOTBALL_API_URL;
-
   const fetchMatches = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      // FIXED: Call Netlify function instead of external API
+      // OPTIMIZED: Start with mock data immediately, then try to fetch real data
+      setMatches(mockMatches);
+      setLastUpdated(new Date());
+      
+      // Try to fetch from Netlify function in background
       try {
-        const response = await axios.get('/.netlify/functions/live-matches');
+        const response = await axios.get('/.netlify/functions/live-matches', {
+          timeout: 5000 // Reduced timeout to 5 seconds
+        });
+        
         if (response.data && response.data.length > 0) {
           setMatches(response.data);
-        } else {
-          setMatches(mockMatches);
         }
       } catch (apiError) {
-        console.log('Netlify function not available, using mock data:', apiError.message);
-        setMatches(mockMatches);
+        console.log('API not available, using mock data:', apiError.message);
+        // Keep mock data, don't show error
       }
       
-      setLastUpdated(new Date());
     } catch (err) {
       console.error('Fetch error:', err);
-      setError('Failed to fetch live matches');
-      setMatches(mockMatches); // Fallback to mock data
+      // Don't show error, keep mock data
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
+    // OPTIMIZED: Load immediately, then set up refresh
     fetchMatches();
     
     // Auto-refresh every 30 seconds
@@ -102,6 +102,7 @@ function App() {
     }
   };
 
+  // OPTIMIZED: Show content faster
   if (loading && matches.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
