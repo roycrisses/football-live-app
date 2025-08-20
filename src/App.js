@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { TrendingUp, Clock, Users, AlertCircle, RefreshCw, Zap, Trophy, Target } from 'lucide-react';
 import AdBanner from './AdBanner';
@@ -8,6 +8,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
+  const dataLoadedRef = useRef(false); // Track if we've loaded data
 
   // Enhanced mock data with 10 matches and win ratio predictions
   const mockMatches = [
@@ -153,13 +154,27 @@ function App() {
     }
   ];
 
+  // ENHANCED: fetchMatches that never overwrites once data is loaded
   const fetchMatches = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
       
-      // Always start with mock data to ensure we have 10 matches
-      setMatches(mockMatches);
+      // If we already have data, don't overwrite it
+      if (dataLoadedRef.current && matches.length > 0) {
+        console.log('Data already loaded, skipping fetch');
+        setLastUpdated(new Date());
+        setLoading(false);
+        return;
+      }
+      
+      // Set initial mock data
+      if (matches.length === 0) {
+        console.log('Setting initial mock data');
+        setMatches(mockMatches);
+        dataLoadedRef.current = true;
+      }
+      
       setLastUpdated(new Date());
       
       // Try to fetch from Netlify function in background
@@ -171,36 +186,64 @@ function App() {
         
         console.log('Netlify function response:', response.data);
         
-        if (response.data && response.data.length > 0) {
-          // Only update if we have enough data (at least 8 matches)
-          if (response.data.length >= 8) {
-            // Enhance API data with win ratio predictions
-            const enhancedData = response.data.map(match => ({
-              ...match,
-              homeWinRatio: Math.floor(Math.random() * 40) + 30,
-              awayWinRatio: Math.floor(Math.random() * 40) + 20,
-              drawRatio: Math.floor(Math.random() * 20) + 10
-            }));
-            setMatches(enhancedData);
-            console.log('Updated with real data:', enhancedData.length, 'matches');
-          } else {
-            console.log('API returned insufficient data, keeping mock data');
-            // Keep mock data if API returns too few matches
-          }
+        // Only update if we have no matches AND API returns good data
+        if (matches.length === 0 && response.data && response.data.length >= 8) {
+          const enhancedData = response.data.map(match => ({
+            ...match,
+            homeWinRatio: Math.floor(Math.random() * 40) + 30,
+            awayWinRatio: Math.floor(Math.random() * 40) + 20,
+            drawRatio: Math.floor(Math.random() * 20) + 10
+          }));
+          setMatches(enhancedData);
+          dataLoadedRef.current = true;
+          console.log('Updated with real data:', enhancedData.length, 'matches');
         } else {
-          console.log('No real data, keeping mock data');
-          // Keep mock data if API returns empty
+          console.log('Keeping existing data, not overwriting');
         }
       } catch (apiError) {
         console.error('Netlify function error:', apiError);
-        console.log('Using mock data due to API error');
-        // Keep mock data on API error
+        console.log('API error, keeping existing data');
       }
       
     } catch (err) {
       console.error('General fetch error:', err);
-      // Ensure we always have matches even on general errors
-      setMatches(mockMatches);
+      // Only set matches if we don't have any
+      if (matches.length === 0) {
+        setMatches(mockMatches);
+        dataLoadedRef.current = true;
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [matches.length]);
+
+  // Manual refresh function for users
+  const handleManualRefresh = useCallback(async () => {
+    console.log('Manual refresh requested');
+    setLoading(true);
+    
+    try {
+      const response = await axios.get('/.netlify/functions/live-matches', {
+        timeout: 8000
+      });
+      
+      if (response.data && response.data.length >= 8) {
+        const enhancedData = response.data.map(match => ({
+          ...match,
+          homeWinRatio: Math.floor(Math.random() * 40) + 30,
+          awayWinRatio: Math.floor(Math.random() * 40) + 20,
+          drawRatio: Math.floor(Math.random() * 20) + 10
+        }));
+        setMatches(enhancedData);
+        console.log('Manual refresh successful:', enhancedData.length, 'matches');
+      } else {
+        console.log('Manual refresh: insufficient data, keeping current matches');
+      }
+      
+      setLastUpdated(new Date());
+    } catch (error) {
+      console.error('Manual refresh failed:', error);
+      // Keep current matches on error
     } finally {
       setLoading(false);
     }
@@ -231,19 +274,24 @@ function App() {
     });
   }, []);
 
+  // NEW: Only fetch once on mount, no auto-refresh
   useEffect(() => {
     fetchMatches();
-    
-    // Auto-refresh every 30 seconds
-    const interval = setInterval(fetchMatches, 30000);
-    
-    return () => clearInterval(interval);
+    // Removed auto-refresh to prevent state overwriting
   }, [fetchMatches]);
 
-  // Safeguard: Ensure we always have matches
+  // SINGLE Safeguard: Ensure we always have matches
   useEffect(() => {
     if (matches.length === 0 && !loading) {
       console.log('Matches became empty, restoring mock data');
+      setMatches(mockMatches);
+    }
+  }, [matches.length, loading]);
+
+  // ENHANCED Safeguard: Prevent matches from ever being reduced
+  useEffect(() => {
+    if (matches.length > 0 && matches.length < 10 && !loading) {
+      console.log(`Matches reduced to ${matches.length}, restoring full mock data`);
       setMatches(mockMatches);
     }
   }, [matches.length, loading]);
@@ -305,7 +353,7 @@ function App() {
             </div>
             
             <button
-              onClick={fetchMatches}
+              onClick={handleManualRefresh}
               disabled={loading}
               className="flex items-center space-x-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all duration-200 hover:scale-105 no-print"
             >
