@@ -158,11 +158,11 @@ function App() {
       setLoading(true);
       setError(null);
       
-      // Show mock data immediately, then try Netlify function
+      // Always start with mock data to ensure we have 10 matches
       setMatches(mockMatches);
       setLastUpdated(new Date());
       
-      // Try to fetch from Netlify function with better error handling
+      // Try to fetch from Netlify function in background
       try {
         console.log('Attempting to fetch from Netlify function...');
         const response = await axios.get('/.netlify/functions/live-matches', {
@@ -172,25 +172,35 @@ function App() {
         console.log('Netlify function response:', response.data);
         
         if (response.data && response.data.length > 0) {
-          // Enhance API data with win ratio predictions
-          const enhancedData = response.data.map(match => ({
-            ...match,
-            homeWinRatio: Math.floor(Math.random() * 40) + 30,
-            awayWinRatio: Math.floor(Math.random() * 40) + 20,
-            drawRatio: Math.floor(Math.random() * 20) + 10
-          }));
-          setMatches(enhancedData);
-          console.log('Updated with real data');
+          // Only update if we have enough data (at least 8 matches)
+          if (response.data.length >= 8) {
+            // Enhance API data with win ratio predictions
+            const enhancedData = response.data.map(match => ({
+              ...match,
+              homeWinRatio: Math.floor(Math.random() * 40) + 30,
+              awayWinRatio: Math.floor(Math.random() * 40) + 20,
+              drawRatio: Math.floor(Math.random() * 20) + 10
+            }));
+            setMatches(enhancedData);
+            console.log('Updated with real data:', enhancedData.length, 'matches');
+          } else {
+            console.log('API returned insufficient data, keeping mock data');
+            // Keep mock data if API returns too few matches
+          }
         } else {
           console.log('No real data, keeping mock data');
+          // Keep mock data if API returns empty
         }
       } catch (apiError) {
         console.error('Netlify function error:', apiError);
         console.log('Using mock data due to API error');
+        // Keep mock data on API error
       }
       
     } catch (err) {
       console.error('General fetch error:', err);
+      // Ensure we always have matches even on general errors
+      setMatches(mockMatches);
     } finally {
       setLoading(false);
     }
@@ -199,13 +209,24 @@ function App() {
   // Function to promote a match to the top
   const promoteMatch = useCallback((matchId) => {
     setMatches(prevMatches => {
-      const matchIndex = prevMatches.findIndex(match => match.id === matchId);
-      if (matchIndex === -1) return prevMatches;
+      // Ensure we have matches to work with
+      if (!prevMatches || prevMatches.length === 0) {
+        console.log('No matches to promote, restoring mock data');
+        return mockMatches;
+      }
       
+      const matchIndex = prevMatches.findIndex(match => match.id === matchId);
+      if (matchIndex === -1) {
+        console.log('Match not found for promotion');
+        return prevMatches;
+      }
+      
+      // Create new array and promote the match
       const newMatches = [...prevMatches];
       const [promotedMatch] = newMatches.splice(matchIndex, 1);
       newMatches.unshift(promotedMatch);
       
+      console.log(`Promoted match: ${promotedMatch.homeTeam} vs ${promotedMatch.awayTeam} to #1`);
       return newMatches;
     });
   }, []);
@@ -218,6 +239,22 @@ function App() {
     
     return () => clearInterval(interval);
   }, [fetchMatches]);
+
+  // Safeguard: Ensure we always have matches
+  useEffect(() => {
+    if (matches.length === 0 && !loading) {
+      console.log('Matches became empty, restoring mock data');
+      setMatches(mockMatches);
+    }
+  }, [matches.length, loading]);
+
+  // Debug: Log matches state changes
+  useEffect(() => {
+    console.log('Matches state updated:', matches.length, 'matches');
+    if (matches.length > 0) {
+      console.log('First match:', matches[0].homeTeam, 'vs', matches[0].awayTeam);
+    }
+  }, [matches]);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -289,7 +326,20 @@ function App() {
         )}
 
         {/* Top Ad Banner */}
-        <AdBanner adSlot="1234567890" className="mb-8" />
+        <AdBanner 
+          adSlot="5352978920" 
+          className="mb-8" 
+          fallback="🔥 Premium Football Content • Stay updated with live scores and predictions"
+        />
+
+        {/* Debug Info - Remove this after fixing the issue */}
+        <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-3 mb-4 text-center">
+          <p className="text-blue-200 text-sm">
+            🔍 Debug: Currently showing {matches.length} matches | 
+            {loading ? ' Loading...' : ' Ready'} | 
+            Last updated: {lastUpdated ? lastUpdated.toLocaleTimeString() : 'Never'}
+          </p>
+        </div>
 
         {/* Top Trending Matches Grid */}
         <div className="mb-8">
@@ -368,7 +418,11 @@ function App() {
         </div>
 
         {/* Middle Ad Banner */}
-        <AdBanner adSlot="0987654321" className="mb-8" />
+        <AdBanner 
+          adSlot="5352978920" 
+          className="mb-8" 
+          fallback="⚽ Live Match Updates • Get real-time scores and trending analysis"
+        />
 
         {matches.length === 0 && !loading && (
           <div className="text-center py-12">
@@ -389,7 +443,11 @@ function App() {
       </footer>
 
       {/* Bottom Ad Banner */}
-      <AdBanner adSlot="1122334455" className="mt-8" />
+      <AdBanner 
+        adSlot="5352978920" 
+        className="mt-8" 
+        fallback="🎯 Win Prediction Analytics • Advanced football insights and trends"
+      />
     </div>
   );
 }
