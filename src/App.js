@@ -328,6 +328,9 @@ function HomePage() {
       case 'soccer': return <Circle className="w-5 h-5 text-ds-accent-green" />;
       case 'basketball': return <Circle className="w-5 h-5 text-ds-accent-yellow" />;
       case 'tennis': return <Circle className="w-5 h-5 text-ds-accent-yellow" />;
+      case 'hockey': return <Circle className="w-5 h-5 text-ds-accent-blue" />;
+      case 'cricket': return <Circle className="w-5 h-5 text-ds-accent-green" />;
+      case 'rugby': return <Circle className="w-5 h-5 text-ds-error" />;
       default: return <Circle className="w-5 h-5 text-ds-accent-blue" />;
     }
   };
@@ -591,6 +594,9 @@ function LiveMatchesPage() {
       case 'soccer': return <Circle className="w-5 h-5 text-ds-accent-green" />;
       case 'basketball': return <Circle className="w-5 h-5 text-ds-accent-yellow" />;
       case 'tennis': return <Circle className="w-5 h-5 text-ds-accent-yellow" />;
+      case 'hockey': return <Circle className="w-5 h-5 text-ds-accent-blue" />;
+      case 'cricket': return <Circle className="w-5 h-5 text-ds-accent-green" />;
+      case 'rugby': return <Circle className="w-5 h-5 text-ds-error" />;
       default: return <Circle className="w-5 h-5 text-ds-accent-blue" />;
     }
   };
@@ -689,7 +695,7 @@ function LiveMatchesPage() {
               </div>
               
               <div className="space-y-2 pt-4 border-t border-ds-border">
-                <p className="text-sm ds-secondary">{match.league}</p>
+                <p className="ds-secondary">{match.league}</p>
               </div>
             </div>
           ))}
