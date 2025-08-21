@@ -214,10 +214,20 @@ function HomePage() {
   // Serper API integration for Google Trends
   const fetchTrendingTopics = async () => {
     try {
+      const apiKey = process.env.REACT_APP_SERPER_API_KEY;
+      if (!apiKey) {
+        setTrendingTopics([
+          { id: 1, topic: 'Premier League', trend: 95, change: 'up', changePercent: 12 },
+          { id: 2, topic: 'NBA Finals', trend: 88, change: 'up', changePercent: 8 },
+          { id: 3, topic: 'Tennis Grand Slam', trend: 76, change: 'down', changePercent: 3 },
+          { id: 4, topic: 'Champions League', trend: 82, change: 'up', changePercent: 15 }
+        ]);
+        return;
+      }
       const response = await fetch('https://google.serper.dev/trends', {
         method: 'POST',
         headers: {
-          'X-API-KEY': '57d89d69890a613ff83ee5c3279400d8ef608cf3',
+          'X-API-KEY': apiKey,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -874,11 +884,42 @@ function NewsPage() {
     try {
       setLoading(true);
       setError(null);
+      const apiKey = process.env.REACT_APP_SERPER_API_KEY;
+      if (!apiKey) {
+        // Fallback to mock data if no key configured
+        setArticles([
+          {
+            id: 1,
+            title: "Premier League Title Race Heats Up: Manchester City vs Arsenal Showdown",
+            excerpt: "The race for the Premier League title is reaching its climax as Manchester City and Arsenal prepare for a crucial encounter that could decide the championship...",
+            category: "Premier League",
+            date: "2024-01-15",
+            readTime: "5 min read"
+          },
+          {
+            id: 2,
+            title: "NBA Finals: Lakers vs Warriors Epic Showdown",
+            excerpt: "The NBA Finals are set for an epic showdown between the Los Angeles Lakers and Golden State Warriors in what promises to be a historic series...",
+            category: "NBA",
+            date: "2024-01-14",
+            readTime: "7 min read"
+          },
+          {
+            id: 3,
+            title: "Tennis Grand Slam: Djokovic vs Nadal Final Preview",
+            excerpt: "Tennis fans are in for a treat as Novak Djokovic and Rafael Nadal face off in the Wimbledon final, continuing their legendary rivalry...",
+            category: "Tennis",
+            date: "2024-01-13",
+            readTime: "8 min read"
+          }
+        ]);
+        return;
+      }
       
       const response = await fetch('https://google.serper.dev/search', {
         method: 'POST',
         headers: {
-          'X-API-KEY': '57d89d69890a613ff83ee5c3279400d8ef608cf3',
+          'X-API-KEY': apiKey,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
