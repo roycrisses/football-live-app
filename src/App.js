@@ -1114,16 +1114,7 @@ function StatisticsPage() {
         <p className="text-gray-600">
           Real-time statistics and analytics powered by ESPN API
         </p>
-        <div className="mt-4">
-          <button
-            onClick={fetchPlayerStats}
-            disabled={loading}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold transition-colors disabled:opacity-50 flex items-center space-x-2 mx-auto"
-          >
-            {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : <RefreshCw className="w-5 h-5" />}
-            <span>{loading ? 'Loading...' : '🔄 Refresh Statistics'}</span>
-          </button>
-        </div>
+
       </div>
 
       {/* Top Ad Banner */}
@@ -1148,19 +1139,8 @@ function StatisticsPage() {
           <span>Top Performers</span>
         </h2>
         
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 animate-pulse">
-                <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded"></div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {stats.topScorers.map((player, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {stats.topScorers.map((player, index) => (
             <div key={player.name} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-3">
