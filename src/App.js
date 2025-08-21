@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import { 
   TrendingUp, Clock, Users, AlertCircle, RefreshCw, Zap, Trophy, Target, Home, 
   Newspaper, BarChart3, Info, Menu, X, Table, RefreshCw as TransferIcon,
-  Search, Settings, Bell, Person, Circle, Star, TrendingDown, Award, Users2, Globe, Filter, ChevronRight,
+  Search, Settings, Bell, User, Circle, Star, TrendingDown, Award, Users2, Globe, Filter, ChevronRight,
   Play, Pause, Eye, Heart, Share2, Bookmark, MoreHorizontal
 } from 'lucide-react';
 import AdBanner from './AdBanner';
@@ -94,7 +94,7 @@ function Navigation() {
               <Settings className="w-5 h-5" />
             </button>
             <button className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200">
-              <Person className="w-5 h-5" />
+              <User className="w-5 h-5" />
             </button>
           </div>
 
