@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import { 
   TrendingUp, Clock, Users, AlertCircle, RefreshCw, Zap, Trophy, Target, Home, 
   Newspaper, BarChart3, Info, Menu, X, Table, RefreshCw as TransferIcon,
-  Search, Settings, Notifications, Person, Circle, Star, TrendingDown, Award, Users2, Globe, Filter, ChevronRight,
+  Search, Settings, Bell, Person, Circle, Star, TrendingDown, Award, Users2, Globe, Filter, ChevronRight,
   Play, Pause, Eye, Heart, Share2, Bookmark, MoreHorizontal
 } from 'lucide-react';
 import AdBanner from './AdBanner';
@@ -88,7 +88,7 @@ function Navigation() {
           {/* User Actions */}
           <div className="hidden md:flex items-center space-x-2">
             <button className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200">
-              <Notifications className="w-5 h-5" />
+              <Bell className="w-5 h-5" />
             </button>
             <button className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200">
               <Settings className="w-5 h-5" />
@@ -312,37 +312,37 @@ function HomePage() {
       } else {
         // Fallback matches
         setFeaturedMatches([
-          {
-            id: 1,
+    {
+      id: 1,
             sport: 'soccer',
-            homeTeam: 'Manchester City',
-            awayTeam: 'Arsenal',
-            homeScore: 2,
-            awayScore: 1,
-            status: 'LIVE',
-            minute: 67,
+      homeTeam: 'Manchester City',
+      awayTeam: 'Arsenal',
+      homeScore: 2,
+      awayScore: 1,
+      status: 'LIVE',
+      minute: 67,
             league: 'Premier League'
-          },
-          {
-            id: 2,
+    },
+    {
+      id: 2,
             sport: 'basketball',
             homeTeam: 'Lakers',
             awayTeam: 'Warriors',
             homeScore: 105,
             awayScore: 98,
             status: 'LIVE',
-            minute: 45,
+      minute: 45,
             league: 'NBA'
-          },
-          {
-            id: 3,
+    },
+    {
+      id: 3,
             sport: 'tennis',
             homeTeam: 'Djokovic',
             awayTeam: 'Nadal',
             homeScore: 2,
             awayScore: 1,
-            status: 'LIVE',
-            minute: 78,
+      status: 'LIVE',
+      minute: 78,
             league: 'Wimbledon'
           }
         ]);
@@ -615,14 +615,14 @@ function LiveMatchesPage() {
             sport: 'soccer',
             homeTeam: 'Manchester City',
             awayTeam: 'Arsenal',
-            homeScore: 2,
-            awayScore: 1,
-            status: 'LIVE',
+      homeScore: 2,
+      awayScore: 1,
+      status: 'LIVE',
             minute: 67,
             trendingScore: 95,
             league: 'Premier League',
             homeWinRatio: 65,
-            awayWinRatio: 25,
+      awayWinRatio: 25,
             drawRatio: 10
           },
           {
@@ -632,7 +632,7 @@ function LiveMatchesPage() {
             awayTeam: 'Warriors',
             homeScore: 105,
             awayScore: 98,
-            status: 'LIVE',
+      status: 'LIVE',
             minute: 45,
             trendingScore: 88,
             league: 'NBA',
@@ -646,8 +646,8 @@ function LiveMatchesPage() {
             homeTeam: 'Djokovic',
             awayTeam: 'Nadal',
             homeScore: 2,
-            awayScore: 1,
-            status: 'LIVE',
+      awayScore: 1,
+      status: 'LIVE',
             minute: 78,
             trendingScore: 82,
             league: 'Wimbledon',
@@ -669,9 +669,9 @@ function LiveMatchesPage() {
           homeTeam: 'Manchester City',
           awayTeam: 'Arsenal',
           homeScore: 2,
-          awayScore: 1,
-          status: 'LIVE',
-          minute: 67,
+      awayScore: 1,
+      status: 'LIVE',
+      minute: 67,
           trendingScore: 95,
           league: 'Premier League',
           homeWinRatio: 65,
@@ -685,11 +685,11 @@ function LiveMatchesPage() {
           awayTeam: 'Warriors',
           homeScore: 105,
           awayScore: 98,
-          status: 'LIVE',
+      status: 'LIVE',
           minute: 45,
           trendingScore: 88,
           league: 'NBA',
-          homeWinRatio: 55,
+      homeWinRatio: 55,
           awayWinRatio: 35,
           drawRatio: 10
         },
@@ -699,8 +699,8 @@ function LiveMatchesPage() {
           homeTeam: 'Djokovic',
           awayTeam: 'Nadal',
           homeScore: 2,
-          awayScore: 1,
-          status: 'LIVE',
+      awayScore: 1,
+      status: 'LIVE',
           minute: 78,
           trendingScore: 82,
           league: 'Wimbledon',
@@ -980,30 +980,30 @@ function NewsPage() {
     fetchSportsNews();
   }, []);
 
-  return (
+    return (
     <div className="space-y-8">
       {/* Page Header */}
       <div className="text-center py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-4">
           📰 Latest Sports News
-        </h1>
+                </h1>
         <p className="text-gray-600">
           Stay updated with breaking news, analysis, and insights from the sports world
-        </p>
+                </p>
         <div className="mt-4">
-          <button 
+            <button
             onClick={fetchSportsNews}
-            disabled={loading}
+              disabled={loading}
             className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold transition-colors disabled:opacity-50 flex items-center space-x-2 mx-auto"
-          >
+            >
             {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : <RefreshCw className="w-5 h-5" />}
             <span>{loading ? 'Loading...' : '🔄 Refresh News'}</span>
-          </button>
+            </button>
+          </div>
         </div>
-      </div>
 
       {/* Error Display */}
-      {error && (
+        {error && (
         <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-center space-x-3">
           <AlertCircle className="w-5 h-5 text-red-500" />
           <span className="text-red-700">{error}</span>
@@ -1015,13 +1015,13 @@ function NewsPage() {
         <div className="text-center py-12">
           <RefreshCw className="w-12 h-12 mx-auto mb-4 animate-spin text-blue-500" />
           <p className="text-gray-600">Loading latest sports news...</p>
-        </div>
-      )}
+          </div>
+        )}
 
-      {/* Top Ad Banner */}
-      <AdBanner 
-        adSlot="6638140433" 
-        className="mb-8" 
+        {/* Top Ad Banner */}
+        <AdBanner 
+          adSlot="6638140433" 
+          className="mb-8" 
         fallback="📰 Premium Sports News • Expert analysis and breaking updates"
       />
 
@@ -1115,8 +1115,8 @@ function StatisticsPage() {
         </h1>
         <p className="text-gray-600">
           Comprehensive statistics and analytics across all sports
-        </p>
-      </div>
+          </p>
+        </div>
 
       {/* Top Ad Banner */}
       <AdBanner 
@@ -1130,8 +1130,8 @@ function StatisticsPage() {
         <h2 className="text-2xl font-bold text-gray-900 flex items-center space-x-2">
           <Trophy className="w-6 h-6 text-yellow-500" />
           <span>Top Performers</span>
-        </h2>
-
+          </h2>
+          
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {stats.topScorers.map((player, index) => (
             <div key={player.name} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
@@ -1154,9 +1154,9 @@ function StatisticsPage() {
                   {player.sport === 'soccer' ? <Circle className="w-5 h-5 text-green-600" /> :
                    player.sport === 'basketball' ? <Circle className="w-5 h-5 text-orange-600" /> :
                    <Circle className="w-5 h-5 text-yellow-600" />}
+                  </div>
                 </div>
-              </div>
-              
+                
               <div className="space-y-2">
                 {player.goals && (
                   <div className="flex justify-between items-center">
@@ -1174,13 +1174,13 @@ function StatisticsPage() {
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Points:</span>
                     <span className="font-semibold text-gray-900">{player.points}</span>
-                  </div>
+                </div>
                 )}
                 {player.rebounds && (
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Rebounds:</span>
                     <span className="font-semibold text-gray-900">{player.rebounds}</span>
-                  </div>
+                </div>
                 )}
                 {player.wins && (
                   <div className="flex justify-between items-center">
@@ -1194,11 +1194,11 @@ function StatisticsPage() {
                     <span className="font-semibold text-gray-900">{player.titles}</span>
                   </div>
                 )}
-              </div>
-            </div>
+                  </div>
+                </div>
           ))}
-        </div>
-      </div>
+                </div>
+              </div>
 
       {/* Team Statistics Section */}
       <div className="space-y-6">
@@ -1243,8 +1243,8 @@ function StatisticsPage() {
               </tbody>
             </table>
           </div>
+          </div>
         </div>
-      </div>
 
       {/* Bottom Ad Banner */}
       <AdBanner 
@@ -1271,9 +1271,9 @@ function AboutPage() {
       </div>
 
       {/* Top Ad Banner */}
-      <AdBanner 
-        adSlot="6638140433" 
-        className="mb-8" 
+        <AdBanner 
+          adSlot="6638140433" 
+          className="mb-8" 
         fallback="🏆 Premium Sports Platform • Live coverage and expert insights"
       />
 
@@ -1290,7 +1290,7 @@ function AboutPage() {
             Powered by cutting-edge APIs including ESPN, SerpApi, and RapidAPI, we ensure you never miss a moment of 
             the action with our reliable, up-to-date information and modern, user-friendly interface.
           </p>
-        </div>
+          </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 text-center">
@@ -1303,7 +1303,7 @@ function AboutPage() {
             <Clock className="w-12 h-12 mx-auto mb-4 text-red-500" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">Real-Time Updates</h3>
             <p className="text-gray-600">Live match updates, scores, and statistics updated in real-time</p>
-          </div>
+        </div>
           
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 text-center">
             <Newspaper className="w-12 h-12 mx-auto mb-4 text-green-500" />
@@ -1335,12 +1335,12 @@ function AboutPage() {
         </div>
       </div>
 
-      {/* Bottom Ad Banner */}
-      <AdBanner 
-        adSlot="6638140433" 
-        className="mt-8" 
+              {/* Bottom Ad Banner */}
+        <AdBanner 
+          adSlot="6638140433" 
+          className="mt-8" 
         fallback="🏆 Premium Sports Experience • Live coverage and expert insights"
-      />
+        />
     </div>
   );
 }
