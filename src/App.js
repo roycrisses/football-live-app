@@ -211,20 +211,19 @@ function HomePage() {
   const [trendingTopics, setTrendingTopics] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // SerpApi integration for Google Trends
+  // Serper API integration for Google Trends
   const fetchTrendingTopics = async () => {
     try {
-      const response = await fetch('https://serpapi.com/search.json', {
+      const response = await fetch('https://google.serper.dev/trends', {
         method: 'POST',
         headers: {
+          'X-API-KEY': '57d89d69890a613ff83ee5c3279400d8ef608cf3',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          api_key: '054e397d6bcbbb01784669bc5ccf4e50f889790c8b998bebdf06664ee711b4fc',
-          engine: 'google_trends',
-          data_type: 'TIMESERIES',
+          query: 'premier league,champions league,football transfers,world cup,nba,tennis',
           geo: 'US',
-          q: 'premier league,champions league,football transfers,world cup,nba,tennis'
+          time: 'today 12-m'
         })
       });
       
@@ -876,22 +875,21 @@ function NewsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // SerpApi integration for real sports news
+  // Serper API integration for real sports news
   const fetchSportsNews = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      const response = await fetch('https://serpapi.com/search.json', {
+      const response = await fetch('https://google.serper.dev/search', {
         method: 'POST',
         headers: {
+          'X-API-KEY': '57d89d69890a613ff83ee5c3279400d8ef608cf3',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          api_key: '054e397d6bcbbb01784669bc5ccf4e50f889790c8b998bebdf06664ee711b4fc',
-          engine: 'google',
           q: 'sports news football basketball tennis today breaking',
-          tbm: 'nws',
+          type: 'news',
           num: 15,
           gl: 'us',
           hl: 'en'
@@ -1114,9 +1112,19 @@ function StatisticsPage() {
           📊 Sports Statistics
         </h1>
         <p className="text-gray-600">
-          Comprehensive statistics and analytics across all sports
-          </p>
+          Real-time statistics and analytics powered by ESPN API
+        </p>
+        <div className="mt-4">
+          <button
+            onClick={fetchPlayerStats}
+            disabled={loading}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold transition-colors disabled:opacity-50 flex items-center space-x-2 mx-auto"
+          >
+            {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : <RefreshCw className="w-5 h-5" />}
+            <span>{loading ? 'Loading...' : '🔄 Refresh Statistics'}</span>
+          </button>
         </div>
+      </div>
 
       {/* Top Ad Banner */}
       <AdBanner 
@@ -1125,15 +1133,34 @@ function StatisticsPage() {
         fallback="📊 Premium Statistics • Detailed analytics and insights"
       />
 
+      {/* Error Display */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-center space-x-3">
+          <AlertCircle className="w-5 h-5 text-red-500" />
+          <span className="text-red-700">{error}</span>
+        </div>
+      )}
+
       {/* Top Scorers Section */}
       <div className="space-y-6">
         <h2 className="text-2xl font-bold text-gray-900 flex items-center space-x-2">
           <Trophy className="w-6 h-6 text-yellow-500" />
           <span>Top Performers</span>
-          </h2>
-          
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {stats.topScorers.map((player, index) => (
+        </h2>
+        
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 animate-pulse">
+                <div className="h-4 bg-gray-200 rounded mb-4"></div>
+                <div className="h-6 bg-gray-200 rounded mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded"></div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {stats.topScorers.map((player, index) => (
             <div key={player.name} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-3">
@@ -1196,9 +1223,11 @@ function StatisticsPage() {
                 )}
                   </div>
                 </div>
-          ))}
-                </div>
               </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Team Statistics Section */}
       <div className="space-y-6">
