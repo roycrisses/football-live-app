@@ -688,6 +688,14 @@ function NewsPage() {
         </div>
       )}
 
+      {/* Loading State */}
+      {loading && (
+        <div className="text-center py-12">
+          <RefreshCw className="w-12 h-12 mx-auto mb-4 animate-spin text-yellow-400" />
+          <p className="text-gray-300">Loading latest football news...</p>
+        </div>
+      )}
+
       {/* Top Ad Banner */}
       <AdBanner 
         adSlot="6638140433" 
@@ -696,40 +704,44 @@ function NewsPage() {
       />
 
       {/* Featured Article */}
-      <div className="glass rounded-xl p-6">
-        <div className="flex items-center space-x-2 mb-3">
-          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">BREAKING</span>
-          <span className="text-gray-400 text-sm">{articles[0].category}</span>
-          <span className="text-gray-400 text-sm">•</span>
-          <span className="text-gray-400 text-sm">{articles[0].date}</span>
-          <span className="text-gray-400 text-sm">•</span>
-          <span className="text-gray-400 text-sm">{articles[0].readTime}</span>
+      {articles.length > 0 && (
+        <div className="glass rounded-xl p-6">
+          <div className="flex items-center space-x-2 mb-3">
+            <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">BREAKING</span>
+            <span className="text-gray-400 text-sm">{articles[0].category}</span>
+            <span className="text-gray-400 text-sm">•</span>
+            <span className="text-gray-400 text-sm">{articles[0].date}</span>
+            <span className="text-gray-400 text-sm">•</span>
+            <span className="text-gray-400 text-sm">{articles[0].readTime}</span>
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-3">{articles[0].title}</h2>
+          <p className="text-gray-300 text-lg mb-4">{articles[0].excerpt}</p>
+          <button className="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg font-semibold transition-colors">
+            Read Full Article
+          </button>
         </div>
-        <h2 className="text-2xl font-bold text-white mb-3">{articles[0].title}</h2>
-        <p className="text-gray-300 text-lg mb-4">{articles[0].excerpt}</p>
-        <button className="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg font-semibold transition-colors">
-          Read Full Article
-        </button>
-      </div>
+      )}
 
       {/* Articles Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {articles.slice(1).map((article) => (
-          <div key={article.id} className="glass rounded-xl p-6 hover:scale-105 transition-transform">
-            <div className="flex items-center space-x-2 mb-3">
-              <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">{article.category}</span>
-              <span className="text-gray-400 text-sm">{article.date}</span>
-              <span className="text-gray-400 text-sm">•</span>
-              <span className="text-gray-400 text-sm">{article.readTime}</span>
+      {!loading && articles.length > 1 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {articles.slice(1).map((article) => (
+            <div key={article.id} className="glass rounded-xl p-6 hover:scale-105 transition-transform">
+              <div className="flex items-center space-x-2 mb-3">
+                <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">{article.category}</span>
+                <span className="text-gray-400 text-sm">{article.date}</span>
+                <span className="text-gray-400 text-sm">•</span>
+                <span className="text-gray-400 text-sm">{article.readTime}</span>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">{article.title}</h3>
+              <p className="text-gray-300 mb-4">{article.excerpt}</p>
+              <button className="text-yellow-400 hover:text-yellow-300 font-medium">
+                Read More →
+              </button>
             </div>
-            <h3 className="text-xl font-semibold text-white mb-3">{article.title}</h3>
-            <p className="text-gray-300 mb-4">{article.excerpt}</p>
-            <button className="text-yellow-400 hover:text-yellow-300 font-medium">
-              Read More →
-            </button>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Bottom Ad Banner */}
       <AdBanner 
