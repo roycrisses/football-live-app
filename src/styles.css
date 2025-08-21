@@ -10,8 +10,8 @@
     --ds-surface-elev: #2A2A2A;
     --ds-border: #333333;
     --ds-border-light: #404040;
-    --ds-text: #FFFFFF;
-    --ds-text-secondary: #CCCCCC;
+    --ds-text: #ff0000;
+    --ds-text-secondary: #00f9f1;
     --ds-text-muted: #999999;
     --ds-disabled: #666666;
     --ds-accent-yellow: #F4D03F;
@@ -122,7 +122,7 @@
   
   /* Loading states */
   .loading-skeleton {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background: linear-gradient(90deg, #6bed7c 25%, #89f49b 50%, #a6f18f 75%);
     background-size: 200% 100%;
     animation: loading 1.5s infinite;
   }
@@ -379,12 +379,12 @@
   /* Win ratio text styling */
   .win-ratio-text {
     font-size: 0.75rem;
-    color: #9ca3af;
+    color: #b90000;
     transition: color 0.3s ease;
   }
   
   .match-card:hover .win-ratio-text {
-    color: #d1d5db;
+    color: #0700d1;
   }
   
   /* Prediction bar container */
