@@ -1221,12 +1221,10 @@ function StatisticsPage() {
                     <span className="font-semibold text-gray-900">{player.titles}</span>
                   </div>
                 )}
-                  </div>
-                </div>
               </div>
-            ))}
+            </div>
           </div>
-        )}
+        ))}
       </div>
 
       {/* Team Statistics Section */}
