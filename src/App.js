@@ -782,13 +782,7 @@ function LiveMatchesPage() {
         </div>
       </div>
 
-      {/* Error Display */}
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-center space-x-3">
-          <AlertCircle className="w-5 h-5 text-red-500" />
-          <span className="text-red-700">{error}</span>
-        </div>
-      )}
+      
 
       {/* Refresh Button */}
       <div className="flex justify-center mb-6">
@@ -1124,13 +1118,7 @@ function StatisticsPage() {
         fallback="📊 Premium Statistics • Detailed analytics and insights"
       />
 
-      {/* Error Display */}
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-center space-x-3">
-          <AlertCircle className="w-5 h-5 text-red-500" />
-          <span className="text-red-700">{error}</span>
-        </div>
-      )}
+      
 
       {/* Top Scorers Section */}
       <div className="space-y-6">
@@ -1203,8 +1191,8 @@ function StatisticsPage() {
                 )}
               </div>
             </div>
-          </div>
         ))}
+          </div>
       </div>
 
       {/* Team Statistics Section */}
