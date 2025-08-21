@@ -266,7 +266,10 @@ function HomePage() {
       const espnEndpoints = {
         'soccer': 'https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard',
         'basketball': 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard',
-        'tennis': 'https://site.api.espn.com/apis/site/v2/sports/tennis/atp/scoreboard'
+        'tennis': 'https://site.api.espn.com/apis/site/v2/sports/tennis/atp/scoreboard',
+        'hockey': 'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard',
+        'cricket': 'https://site.api.espn.com/apis/site/v2/sports/cricket/ipl/scoreboard',
+        'rugby': 'https://site.api.espn.com/apis/site/v2/sports/rugby/nrl/scoreboard'
       };
       
       let allMatches = [];
@@ -491,8 +494,7 @@ function LiveMatchesPage() {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { selectedSport } = useContext(SportContext);
-  const [localSelectedSport, setLocalSelectedSport] = useState('all');
+  const { selectedSport, setSelectedSport } = useContext(SportContext);
 
   // ESPN API integration for live matches (free, no API key required)
   const fetchLiveMatches = useCallback(async () => {
@@ -513,14 +515,22 @@ function LiveMatchesPage() {
         'tennis': {
           'ATP': 'https://site.api.espn.com/apis/site/v2/sports/tennis/atp/scoreboard',
           'WTA': 'https://site.api.espn.com/apis/site/v2/sports/tennis/wta/scoreboard'
+        },
+        'hockey': {
+          'NHL': 'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard'
+        },
+        'cricket': {
+          'IPL': 'https://site.api.espn.com/apis/site/v2/sports/cricket/ipl/scoreboard'
+        },
+        'rugby': {
+          'NRL': 'https://site.api.espn.com/apis/site/v2/sports/rugby/nrl/scoreboard'
         }
       };
       
       let allMatches = [];
       
       for (const [sport, leagues] of Object.entries(espnEndpoints)) {
-        const active = localSelectedSport !== 'all' ? localSelectedSport : selectedSport;
-        if (active !== 'all' && active !== sport) continue;
+        if (selectedSport !== 'all' && selectedSport !== sport) continue;
         
         for (const [league, endpoint] of Object.entries(leagues)) {
           try {
@@ -568,7 +578,7 @@ function LiveMatchesPage() {
     } finally {
       setLoading(false);
     }
-  }, [localSelectedSport, selectedSport]);
+  }, [selectedSport]);
 
   useEffect(() => {
     fetchLiveMatches();
@@ -609,12 +619,11 @@ function LiveMatchesPage() {
         <div className="flex space-x-2 ds-card-elev rounded-xl p-1">
           {sports.map((sport) => {
             const Icon = sport.icon;
-            const effective = localSelectedSport !== 'all' ? localSelectedSport : selectedSport;
-            const isSelected = effective === sport.id;
+            const isSelected = selectedSport === sport.id;
             return (
               <button
                 key={sport.id}
-                onClick={() => setLocalSelectedSport(sport.id)}
+                onClick={() => setSelectedSport(sport.id)}
                 className={`px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2 ${
                   isSelected ? 'ds-chip-active' : 'ds-chip'
                 }`}
