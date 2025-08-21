@@ -251,37 +251,45 @@ function LiveMatchesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Football-Data.org API integration for live matches
+  // ESPN API integration for live matches (free, no API key required)
   const fetchLiveMatches = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      // Fetch matches from multiple competitions
-      const competitions = ['PL', 'PD', 'BL1', 'SA', 'FL1'];
+      // ESPN API endpoints for different leagues
+      const espnEndpoints = {
+        'PL': 'https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard',
+        'PD': 'https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard',
+        'BL1': 'https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard'
+      };
+      
       let allMatches = [];
       
-      for (const comp of competitions) {
+      for (const [comp, endpoint] of Object.entries(espnEndpoints)) {
         try {
-          const response = await fetch(`https://api.football-data.org/v4/competitions/${comp}/matches?status=LIVE`, {
-            headers: {
-              'X-Auth-Token': 'c9d25c4d28ab4518ad9ffeaa7e937189'
-            }
-          });
+          const response = await fetch(endpoint);
           
           if (response.ok) {
             const data = await response.json();
-            if (data.matches && data.matches.length > 0) {
-              const formattedMatches = data.matches.map(match => ({
+            if (data.events && data.events.length > 0) {
+              const liveMatches = data.events.filter(event => 
+                event.status.type.state === 'in' || 
+                event.status.type.description === 'Halftime'
+              );
+              
+              const formattedMatches = liveMatches.map(match => ({
                 id: match.id,
-                homeTeam: match.homeTeam.name,
-                awayTeam: match.awayTeam.name,
-                homeScore: match.score.fullTime.home || 0,
-                awayScore: match.score.fullTime.away || 0,
-                status: match.status === 'LIVE' ? 'LIVE' : match.status === 'IN_PLAY' ? 'LIVE' : 'HT',
-                minute: match.minute || Math.floor(Math.random() * 90) + 1,
+                homeTeam: match.competitions[0].competitors.find(c => c.homeAway === 'home')?.team.name || 'Unknown',
+                awayTeam: match.competitions[0].competitors.find(c => c.homeAway === 'away')?.team.name || 'Unknown',
+                homeScore: parseInt(match.competitions[0].competitors.find(c => c.homeAway === 'home')?.score || 0),
+                awayScore: parseInt(match.competitions[0].competitors.find(c => c.homeAway === 'away')?.score || 0),
+                status: match.status.type.state === 'in' ? 'LIVE' : 'HT',
+                minute: match.status.type.description?.includes('minute') ? 
+                  parseInt(match.status.type.description.match(/\d+/)?.[0] || 0) : 
+                  Math.floor(Math.random() * 90) + 1,
                 trendingScore: Math.floor(Math.random() * 40) + 60,
-                league: match.competition.name,
+                league: match.league.name,
                 homeWinRatio: Math.floor(Math.random() * 40) + 30,
                 awayWinRatio: Math.floor(Math.random() * 40) + 20,
                 drawRatio: Math.floor(Math.random() * 20) + 10
@@ -301,47 +309,47 @@ function LiveMatchesPage() {
       } else {
         // Fallback to mock data if no live matches
         setMatches([
-          {
-            id: 1,
-            homeTeam: 'Manchester City',
-            awayTeam: 'Arsenal',
-            homeScore: 2,
-            awayScore: 1,
-            status: 'LIVE',
-            minute: 67,
-            trendingScore: 95,
-            league: 'Premier League',
-            homeWinRatio: 65,
-            awayWinRatio: 25,
-            drawRatio: 10
-          },
-          {
-            id: 2,
-            homeTeam: 'Barcelona',
-            awayTeam: 'Real Madrid',
-            homeScore: 1,
-            awayScore: 1,
-            status: 'HT',
-            minute: 45,
-            trendingScore: 88,
-            league: 'La Liga',
-            homeWinRatio: 45,
-            awayWinRatio: 40,
-            drawRatio: 15
-          },
-          {
-            id: 3,
-            homeTeam: 'Bayern Munich',
-            awayTeam: 'Borussia Dortmund',
-            homeScore: 3,
-            awayScore: 0,
-            status: 'LIVE',
-            minute: 78,
-            trendingScore: 82,
-            league: 'Bundesliga',
-            homeWinRatio: 70,
-            awayWinRatio: 20,
-            drawRatio: 10
+    {
+      id: 1,
+      homeTeam: 'Manchester City',
+      awayTeam: 'Arsenal',
+      homeScore: 2,
+      awayScore: 1,
+      status: 'LIVE',
+      minute: 67,
+      trendingScore: 95,
+      league: 'Premier League',
+      homeWinRatio: 65,
+      awayWinRatio: 25,
+      drawRatio: 10
+    },
+    {
+      id: 2,
+      homeTeam: 'Barcelona',
+      awayTeam: 'Real Madrid',
+      homeScore: 1,
+      awayScore: 1,
+      status: 'HT',
+      minute: 45,
+      trendingScore: 88,
+      league: 'La Liga',
+      homeWinRatio: 45,
+      awayWinRatio: 40,
+      drawRatio: 15
+    },
+    {
+      id: 3,
+      homeTeam: 'Bayern Munich',
+      awayTeam: 'Borussia Dortmund',
+      homeScore: 3,
+      awayScore: 0,
+      status: 'LIVE',
+      minute: 78,
+      trendingScore: 82,
+      league: 'Bundesliga',
+      homeWinRatio: 70,
+      awayWinRatio: 20,
+      drawRatio: 10
           }
         ]);
       }
@@ -355,38 +363,38 @@ function LiveMatchesPage() {
           id: 1,
           homeTeam: 'Manchester City',
           awayTeam: 'Arsenal',
-          homeScore: 2,
-          awayScore: 1,
-          status: 'LIVE',
+      homeScore: 2,
+      awayScore: 1,
+      status: 'LIVE',
           minute: 67,
           trendingScore: 95,
           league: 'Premier League',
           homeWinRatio: 65,
-          awayWinRatio: 25,
+      awayWinRatio: 25,
           drawRatio: 10
         },
         {
           id: 2,
           homeTeam: 'Barcelona',
           awayTeam: 'Real Madrid',
-          homeScore: 1,
-          awayScore: 1,
+      homeScore: 1,
+      awayScore: 1,
           status: 'HT',
           minute: 45,
           trendingScore: 88,
           league: 'La Liga',
-          homeWinRatio: 45,
-          awayWinRatio: 40,
-          drawRatio: 15
-        },
-        {
+      homeWinRatio: 45,
+      awayWinRatio: 40,
+      drawRatio: 15
+    },
+    {
           id: 3,
           homeTeam: 'Bayern Munich',
           awayTeam: 'Borussia Dortmund',
           homeScore: 3,
-          awayScore: 0,
-          status: 'LIVE',
-          minute: 78,
+      awayScore: 0,
+      status: 'LIVE',
+      minute: 78,
           trendingScore: 82,
           league: 'Bundesliga',
           homeWinRatio: 70,
@@ -424,50 +432,50 @@ function LiveMatchesPage() {
     }
   };
 
-  return (
+    return (
     <div className="space-y-8">
       {/* Page Header */}
       <div className="text-center py-8">
         <h1 className="text-3xl font-bold text-white mb-4">
           🔥 Live Football Matches
-        </h1>
+                </h1>
         <p className="text-gray-300">
           Real-time scores, predictions, and trending analysis
-        </p>
+                </p>
         <div className="mt-4">
-          <button 
+            <button
             onClick={fetchLiveMatches}
-            disabled={loading}
+              disabled={loading}
             className="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg font-semibold transition-colors disabled:opacity-50 flex items-center mx-auto"
-          >
+            >
             {loading ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
             {loading ? 'Loading...' : '🔄 Refresh Matches'}
-          </button>
+            </button>
+          </div>
         </div>
-      </div>
 
       {/* Error Display */}
-      {error && (
-        <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-4 mb-6 flex items-center space-x-3">
-          <AlertCircle className="w-5 h-5 text-red-400" />
-          <span className="text-red-200">{error}</span>
-        </div>
-      )}
+        {error && (
+          <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-4 mb-6 flex items-center space-x-3">
+            <AlertCircle className="w-5 h-5 text-red-400" />
+            <span className="text-red-200">{error}</span>
+          </div>
+        )}
 
-      {/* Top Ad Banner */}
-      <AdBanner 
-        adSlot="6638140433" 
-        className="mb-8" 
-        fallback="🔥 Premium Football Content • Stay updated with live scores and predictions"
-      />
+        {/* Top Ad Banner */}
+        <AdBanner 
+          adSlot="6638140433" 
+          className="mb-8" 
+          fallback="🔥 Premium Football Content • Stay updated with live scores and predictions"
+        />
 
-      {/* Top Trending Matches Grid */}
+        {/* Top Trending Matches Grid */}
       <div>
         <h2 className="text-xl font-semibold text-white mb-6 flex items-center justify-center">
-          <Trophy className="w-6 h-6 mr-2 text-yellow-400" />
-          Top 10 Trending Matches
-        </h2>
-        
+            <Trophy className="w-6 h-6 mr-2 text-yellow-400" />
+            Top 10 Trending Matches
+          </h2>
+          
         {loading ? (
           <div className="text-center py-12">
             <RefreshCw className="w-12 h-12 mx-auto mb-4 animate-spin text-yellow-400" />
@@ -477,55 +485,55 @@ function LiveMatchesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {matches.map((match, index) => (
             <div key={match.id} className="glass rounded-xl p-4 match-card hover:scale-105 transition-all duration-200">
-              {/* Match Header */}
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center space-x-2">
-                  <span className="text-xs text-gray-400">{match.league}</span>
-                  {index === 0 && (
-                    <Trophy className="w-4 h-4 text-yellow-400" />
-                  )}
+                {/* Match Header */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs text-gray-400">{match.league}</span>
+                    {index === 0 && (
+                      <Trophy className="w-4 h-4 text-yellow-400" />
+                    )}
+                  </div>
+                  <div className={`px-2 py-1 rounded-full text-xs font-medium text-white flex items-center space-x-1 ${getStatusColor(match.status)}`}>
+                    {getStatusIcon(match.status)}
+                    <span>{match.status}</span>
+                    {match.minute && <span>• {match.minute}'</span>}
+                  </div>
                 </div>
-                <div className={`px-2 py-1 rounded-full text-xs font-medium text-white flex items-center space-x-1 ${getStatusColor(match.status)}`}>
-                  {getStatusIcon(match.status)}
-                  <span>{match.status}</span>
-                  {match.minute && <span>• {match.minute}'</span>}
+                
+                {/* Team Names and Scores */}
+                <div className="text-center mb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-white font-medium text-sm truncate">{match.homeTeam}</span>
+                    <span className="text-2xl font-bold text-yellow-400">{match.homeScore}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-white font-medium text-sm truncate">{match.awayTeam}</span>
+                    <span className="text-2xl font-bold text-yellow-400">{match.awayScore}</span>
+                  </div>
                 </div>
-              </div>
-              
-              {/* Team Names and Scores */}
-              <div className="text-center mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-white font-medium text-sm truncate">{match.homeTeam}</span>
-                  <span className="text-2xl font-bold text-yellow-400">{match.homeScore}</span>
+                
+                {/* Trending Score */}
+                <div className="flex items-center justify-between text-xs text-gray-400 mb-3">
+                  <span>Trending: {match.trendingScore}%</span>
+                  <span className="text-yellow-400">#{index + 1}</span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-white font-medium text-sm truncate">{match.awayTeam}</span>
-                  <span className="text-2xl font-bold text-yellow-400">{match.awayScore}</span>
-                </div>
-              </div>
-              
-              {/* Trending Score */}
-              <div className="flex items-center justify-between text-xs text-gray-400 mb-3">
-                <span>Trending: {match.trendingScore}%</span>
-                <span className="text-yellow-400">#{index + 1}</span>
-              </div>
-              
-              {/* Win Ratio Prediction Bar */}
-              <div className="mb-3">
-                <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
-                  <span>Win Prediction</span>
-                  <Target className="w-3 h-3" />
-                </div>
-                <div className="w-full bg-gray-700 rounded-full h-2 mb-2">
-                  <div 
-                    className="bg-green-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${match.homeWinRatio}%` }}
-                  ></div>
-                </div>
-                <div className="flex justify-between text-xs text-gray-400">
-                  <span>{match.homeTeam}: {match.homeWinRatio}%</span>
-                  <span>Draw: {match.drawRatio}%</span>
-                  <span>{match.awayTeam}: {match.awayWinRatio}%</span>
+                
+                {/* Win Ratio Prediction Bar */}
+                <div className="mb-3">
+                  <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
+                    <span>Win Prediction</span>
+                    <Target className="w-3 h-3" />
+                  </div>
+                  <div className="w-full bg-gray-700 rounded-full h-2 mb-2">
+                    <div 
+                      className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${match.homeWinRatio}%` }}
+                    ></div>
+                  </div>
+                  <div className="flex justify-between text-xs text-gray-400">
+                    <span>{match.homeTeam}: {match.homeWinRatio}%</span>
+                    <span>Draw: {match.drawRatio}%</span>
+                    <span>{match.awayTeam}: {match.awayWinRatio}%</span>
                 </div>
               </div>
             </div>
@@ -823,9 +831,9 @@ function StatisticsPage() {
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
+                  </div>
+                </div>
+                
       {/* League Statistics */}
       <div>
         <h2 className="text-2xl font-semibold text-white mb-6">🏟️ League Statistics</h2>
@@ -846,11 +854,11 @@ function StatisticsPage() {
                   <span className="text-gray-400">Top Team:</span>
                   <span className="text-white font-semibold">{league.topTeam}</span>
                 </div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
 
       {/* Bottom Ad Banner */}
       <AdBanner 
@@ -877,9 +885,9 @@ function AboutPage() {
       </div>
 
       {/* Top Ad Banner */}
-      <AdBanner 
-        adSlot="6638140433" 
-        className="mb-8" 
+        <AdBanner 
+          adSlot="6638140433" 
+          className="mb-8" 
         fallback="ℹ️ Premium Football Content • Learn more about our platform"
       />
 
@@ -994,8 +1002,8 @@ function Navigation({ isOpen, setIsOpen }) {
               ))}
             </ul>
           </nav>
-        </div>
-      )}
+          </div>
+        )}
 
       {/* Desktop Navigation */}
       <nav className="hidden md:flex items-center space-x-6">
@@ -1054,12 +1062,12 @@ function App() {
             <Route path="/statistics" element={<StatisticsPage />} />
             <Route path="/about" element={<AboutPage />} />
           </Routes>
-        </main>
+      </main>
 
-        {/* Footer */}
-        <footer className="bg-black/20 backdrop-blur-md border-t border-white/10 mt-16 no-print">
-          <div className="container mx-auto px-4 py-6">
-            <div className="text-center text-gray-400 text-sm">
+      {/* Footer */}
+      <footer className="bg-black/20 backdrop-blur-md border-t border-white/10 mt-16 no-print">
+        <div className="container mx-auto px-4 py-6">
+          <div className="text-center text-gray-400 text-sm">
               <p>🔥 Football Live • Your ultimate football companion</p>
               <p className="mt-2">
                 <Link to="/" className="hover:text-white transition-colors">Home</Link> • 
@@ -1070,10 +1078,10 @@ function App() {
                 <Link to="/statistics" className="hover:text-white transition-colors ml-2">Statistics</Link> • 
                 <Link to="/about" className="hover:text-white transition-colors ml-2">About</Link>
               </p>
-            </div>
           </div>
-        </footer>
-      </div>
+        </div>
+      </footer>
+    </div>
     </Router>
   );
 }

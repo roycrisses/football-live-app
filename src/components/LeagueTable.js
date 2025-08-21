@@ -7,47 +7,61 @@ function LeagueTable() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Football-Data.org API integration
+  // ESPN API integration (free, no API key required)
   const fetchLeagueStandings = async (leagueId) => {
     try {
       setLoading(true);
       setError(null);
       
-      const response = await fetch(`https://api.football-data.org/v4/competitions/${leagueId}/standings`, {
-        headers: {
-          'X-Auth-Token': 'c9d25c4d28ab4518ad9ffeaa7e937189'
-        }
-      });
+      console.log(`Fetching standings for ${leagueId}...`);
+      
+      // ESPN API endpoints for different leagues
+      const espnEndpoints = {
+        'PL': 'https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/standings',
+        'PD': 'https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/standings',
+        'BL1': 'https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/standings'
+      };
+      
+      const response = await fetch(espnEndpoints[leagueId]);
+      
+      console.log(`Response status: ${response.status}`);
       
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        console.error('API Error Response:', errorText);
+        throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
       }
       
       const data = await response.json();
+      console.log('ESPN API Response:', data);
       
-      if (data.standings && data.standings.length > 0) {
-        const tableData = data.standings[0].table.map(team => ({
-          position: team.position,
+      if (data.groups && data.groups.length > 0) {
+        const tableData = data.groups[0].standings.map(team => ({
+          position: team.stats.find(s => s.name === 'rank')?.value || 0,
           team: team.team.name,
-          played: team.playedGames,
-          won: team.won,
-          drawn: team.draw,
-          lost: team.lost,
-          goalsFor: team.goalsFor,
-          goalsAgainst: team.goalsAgainst,
-          goalDifference: team.goalDifference,
-          points: team.points,
-          form: team.form ? team.form.split('').slice(-5) : ['-', '-', '-', '-', '-']
+          played: team.stats.find(s => s.name === 'gamesPlayed')?.value || 0,
+          won: team.stats.find(s => s.name === 'wins')?.value || 0,
+          drawn: team.stats.find(s => s.name === 'ties')?.value || 0,
+          lost: team.stats.find(s => s.name === 'losses')?.value || 0,
+          goalsFor: team.stats.find(s => s.name === 'pointsFor')?.value || 0,
+          goalsAgainst: team.stats.find(s => s.name === 'pointsAgainst')?.value || 0,
+          goalDifference: (team.stats.find(s => s.name === 'pointsFor')?.value || 0) - (team.stats.find(s => s.name === 'pointsAgainst')?.value || 0),
+          points: team.stats.find(s => s.name === 'points')?.value || 0,
+          form: team.stats.find(s => s.name === 'form')?.value?.split('').slice(-5) || ['-', '-', '-', '-', '-']
         }));
         
         setStandings(prev => ({
           ...prev,
           [leagueId]: tableData
         }));
+        console.log(`Successfully loaded ${tableData.length} teams for ${leagueId}`);
+      } else {
+        console.warn('No standings data found in ESPN API response');
+        throw new Error('No standings data available');
       }
     } catch (err) {
       console.error('Error fetching standings:', err);
-      setError(`Failed to load ${selectedLeague} standings. Using cached data.`);
+      setError(`Failed to load ${selectedLeague} standings (${err.message}). Using cached data.`);
       
       // Fallback to mock data
       const fallbackData = {
@@ -86,9 +100,29 @@ function LeagueTable() {
     'Bundesliga': { id: 'BL1', name: 'Bundesliga' }
   };
 
+  // Test ESPN API connection
+  const testAPIConnection = async () => {
+    try {
+      console.log('Testing ESPN API connection...');
+      const response = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/standings');
+      console.log('ESPN API Test Response Status:', response.status);
+      if (response.ok) {
+        const data = await response.json();
+        console.log('ESPN API Test Success:', data.name || 'Premier League');
+      } else {
+        const errorText = await response.text();
+        console.error('ESPN API Test Failed:', errorText);
+      }
+    } catch (err) {
+      console.error('ESPN API Test Error:', err);
+    }
+  };
+
   useEffect(() => {
     const leagueId = leagues[selectedLeague]?.id;
     if (leagueId) {
+      // Test API first
+      testAPIConnection();
       fetchLeagueStandings(leagueId);
     }
   }, [selectedLeague]);
@@ -119,16 +153,22 @@ function LeagueTable() {
           🏆 League Tables
         </h1>
         <p className="text-gray-300">
-          Real-time standings and form for top European leagues
+          Real-time standings from ESPN API (Free & Public)
         </p>
-        <div className="mt-4">
+        <div className="mt-4 flex justify-center space-x-4">
           <button 
             onClick={() => fetchLeagueStandings(leagues[selectedLeague]?.id)}
             disabled={loading}
-            className="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg font-semibold transition-colors disabled:opacity-50 flex items-center mx-auto"
+            className="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg font-semibold transition-colors disabled:opacity-50 flex items-center"
           >
             {loading ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
             {loading ? 'Loading...' : '🔄 Refresh Data'}
+          </button>
+          <button 
+            onClick={testAPIConnection}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors flex items-center"
+          >
+            🔧 Test ESPN API
           </button>
         </div>
       </div>
