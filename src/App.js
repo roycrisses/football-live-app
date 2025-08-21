@@ -1,20 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, createContext, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { 
-  TrendingUp, Clock, Users, AlertCircle, RefreshCw, Zap, Trophy, Target, Home, 
+  TrendingUp, Clock, AlertCircle, RefreshCw, Trophy, Home, 
   Newspaper, BarChart3, Info, Menu, X, Table, RefreshCw as TransferIcon,
-  Search, Settings, Bell, User, Circle, Star, TrendingDown, Award, Users2, Globe, Filter, ChevronRight,
-  Play, Pause, Eye, Heart, Share2, Bookmark, MoreHorizontal
+  Search, Settings, Bell, User, Circle, TrendingDown, Users2, Globe, ChevronRight,
+  Play, Eye, Share2, Bookmark
 } from 'lucide-react';
 import AdBanner from './AdBanner';
 import LeagueTable from './components/LeagueTable';
 import TransferNews from './components/TransferNews';
 
+// Global sport selection context to sync Navbar filter with pages
+const SportContext = createContext({ selectedSport: 'all', setSelectedSport: () => {} });
+
 // Modern Navigation Component with Google Material Design
 function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedSport, setSelectedSport] = useState('all');
+  const { selectedSport, setSelectedSport } = useContext(SportContext);
   const location = useLocation();
 
   const sports = [
@@ -210,6 +213,7 @@ function HomePage() {
   const [featuredMatches, setFeaturedMatches] = useState([]);
   const [trendingTopics, setTrendingTopics] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { selectedSport } = useContext(SportContext);
 
   // Serper API integration for Google Trends
   const fetchTrendingTopics = async () => {
@@ -274,7 +278,7 @@ function HomePage() {
   };
 
   // ESPN API integration for live matches
-  const fetchLiveMatches = async () => {
+  const fetchLiveMatches = useCallback(async () => {
     try {
       const espnEndpoints = {
         'soccer': 'https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard',
@@ -361,7 +365,7 @@ function HomePage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchTrendingTopics();
@@ -442,7 +446,10 @@ function HomePage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredMatches.map((match) => (
+            {(selectedSport === 'all' 
+              ? featuredMatches 
+              : featuredMatches.filter(m => m.sport === selectedSport)
+            ).map((match) => (
               <div key={match.id} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
                 <div className="flex items-center justify-between mb-4">
                   <div className={`p-2 rounded-lg bg-gradient-to-r ${getSportColor(match.sport)}`}>
@@ -545,7 +552,8 @@ function LiveMatchesPage() {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedSport, setSelectedSport] = useState('all');
+  const { selectedSport } = useContext(SportContext);
+  const [localSelectedSport, setLocalSelectedSport] = useState('all');
 
   // ESPN API integration for live matches (free, no API key required)
   const fetchLiveMatches = async () => {
@@ -572,7 +580,8 @@ function LiveMatchesPage() {
       let allMatches = [];
       
       for (const [sport, leagues] of Object.entries(espnEndpoints)) {
-        if (selectedSport !== 'all' && selectedSport !== sport) continue;
+        const active = localSelectedSport !== 'all' ? localSelectedSport : selectedSport;
+        if (active !== 'all' && active !== sport) continue;
         
         for (const [league, endpoint] of Object.entries(leagues)) {
           try {
@@ -725,11 +734,9 @@ function LiveMatchesPage() {
 
   useEffect(() => {
     fetchLiveMatches();
-    
-    // Auto-refresh every 30 seconds for live matches
     const interval = setInterval(fetchLiveMatches, 30000);
     return () => clearInterval(interval);
-  }, [selectedSport]);
+  }, [fetchLiveMatches]);
 
   const getSportIcon = (sport) => {
     switch (sport) {
@@ -773,11 +780,12 @@ function LiveMatchesPage() {
         <div className="flex space-x-2 bg-gray-100 rounded-xl p-1">
           {sports.map((sport) => {
             const Icon = sport.icon;
-            const isSelected = selectedSport === sport.id;
+            const effective = localSelectedSport !== 'all' ? localSelectedSport : selectedSport;
+            const isSelected = effective === sport.id;
             return (
               <button
                 key={sport.id}
-                onClick={() => setSelectedSport(sport.id)}
+                onClick={() => setLocalSelectedSport(sport.id)}
                 className={`px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2 ${
                   isSelected
                     ? 'bg-white text-blue-600 shadow-md'
@@ -1383,8 +1391,10 @@ function AboutPage() {
 
 // Main App Component
 function App() {
+  const [selectedSport, setSelectedSport] = useState('all');
   return (
     <Router>
+      <SportContext.Provider value={{ selectedSport, setSelectedSport }}>
       <div className="min-h-screen bg-gray-50">
         <Navigation />
         
@@ -1424,6 +1434,7 @@ function App() {
           </div>
         </footer>
       </div>
+      </SportContext.Provider>
     </Router>
   );
 }

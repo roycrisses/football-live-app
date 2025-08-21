@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, TrendingUp, TrendingDown, Minus, RefreshCw, AlertCircle } from 'lucide-react';
+import { Trophy, RefreshCw, AlertCircle } from 'lucide-react';
 
 function LeagueTable() {
   const [selectedLeague, setSelectedLeague] = useState('Premier League');
@@ -48,11 +48,11 @@ function LeagueTable() {
       // Process the RapidAPI response to extract league standings
       if (data && data.length > 0) {
         // Filter and process soccer-related content for standings
-        const soccerContent = data.filter(item => 
-          item.title && item.title.toLowerCase().includes('standings') ||
-          item.title && item.title.toLowerCase().includes('table') ||
-          item.description && item.description.toLowerCase().includes('league')
-        );
+        const soccerContent = data.filter(item => (
+          (item.title && item.title.toLowerCase().includes('standings')) ||
+          (item.title && item.title.toLowerCase().includes('table')) ||
+          (item.description && item.description.toLowerCase().includes('league'))
+        ));
         
         if (soccerContent.length > 0) {
           // For now, we'll use the content to generate mock standings based on the API response
