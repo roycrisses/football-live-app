@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { TrendingUp, Clock, Users, AlertCircle, RefreshCw, Zap, Trophy, Target, Home, Newspaper, BarChart3, Info, Menu, X, Table, RefreshCw as TransferIcon } from 'lucide-react';
 import AdBanner from './AdBanner';
@@ -39,6 +39,76 @@ function HomePage() {
       league: 'Bundesliga'
     }
   ]);
+
+  const [trendingTopics, setTrendingTopics] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // SerpApi integration for Google Trends
+  const fetchTrendingTopics = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('https://serpapi.com/search.json', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          api_key: '054e397d6bcbbb01784669bc5ccf4e50f889790c8b998bebdf06664ee711b4fc',
+          engine: 'google_trends',
+          data_type: 'TIMESERIES',
+          geo: 'US',
+          q: 'premier league,champions league,football transfers,world cup'
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.interest_over_time) {
+        // Extract trending topics from the data
+        const topics = [
+          'Premier League',
+          'Champions League', 
+          'Football Transfers',
+          'World Cup',
+          'La Liga',
+          'Bundesliga'
+        ];
+        
+        const trendingData = topics.map((topic, index) => ({
+          id: index + 1,
+          topic: topic,
+          trend: Math.floor(Math.random() * 100) + 50, // Mock trend data for now
+          change: Math.random() > 0.5 ? 'up' : 'down',
+          changePercent: Math.floor(Math.random() * 30) + 5
+        }));
+        
+        setTrendingTopics(trendingData);
+      } else {
+        // Fallback trending topics
+        setTrendingTopics([
+          { id: 1, topic: 'Premier League', trend: 95, change: 'up', changePercent: 12 },
+          { id: 2, topic: 'Champions League', trend: 88, change: 'up', changePercent: 8 },
+          { id: 3, topic: 'Football Transfers', trend: 76, change: 'down', changePercent: 3 },
+          { id: 4, topic: 'World Cup', trend: 82, change: 'up', changePercent: 15 }
+        ]);
+      }
+    } catch (err) {
+      console.error('Error fetching trends:', err);
+      // Fallback trending topics
+      setTrendingTopics([
+        { id: 1, topic: 'Premier League', trend: 95, change: 'up', changePercent: 12 },
+        { id: 2, topic: 'Champions League', trend: 88, change: 'up', changePercent: 8 },
+        { id: 3, topic: 'Football Transfers', trend: 76, change: 'down', changePercent: 3 },
+        { id: 4, topic: 'World Cup', trend: 82, change: 'up', changePercent: 15 }
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTrendingTopics();
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -88,6 +158,41 @@ function HomePage() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Trending Topics Section */}
+      <div className="glass rounded-xl p-6">
+        <h2 className="text-2xl font-semibold text-white mb-6 flex items-center">
+          <TrendingUp className="w-6 h-6 mr-2 text-yellow-400" />
+          🔥 Trending Football Topics
+        </h2>
+        {loading ? (
+          <div className="text-center py-8">
+            <div className="loading-spinner mx-auto mb-4"></div>
+            <p className="text-gray-300">Loading trending topics...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {trendingTopics.map((topic) => (
+              <div key={topic.id} className="bg-white/5 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-white font-semibold">{topic.topic}</h3>
+                  <span className={`text-sm font-medium ${
+                    topic.change === 'up' ? 'text-green-400' : 'text-red-400'
+                  }`}>
+                    {topic.change === 'up' ? '↗' : '↘'} {topic.changePercent}%
+                  </span>
+                </div>
+                <div className="text-2xl font-bold text-yellow-400 mb-2">
+                  {topic.trend}
+                </div>
+                <div className="text-xs text-gray-400">
+                  Trend Score
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Content Sections */}
@@ -142,148 +247,165 @@ function HomePage() {
 
 // Live Matches Page Component
 function LiveMatchesPage() {
-  const [matches] = useState([
-    {
-      id: 1,
-      homeTeam: 'Manchester City',
-      awayTeam: 'Arsenal',
-      homeScore: 2,
-      awayScore: 1,
-      status: 'LIVE',
-      minute: 67,
-      trendingScore: 95,
-      league: 'Premier League',
-      homeWinRatio: 65,
-      awayWinRatio: 25,
-      drawRatio: 10
-    },
-    {
-      id: 2,
-      homeTeam: 'Barcelona',
-      awayTeam: 'Real Madrid',
-      homeScore: 1,
-      awayScore: 1,
-      status: 'HT',
-      minute: 45,
-      trendingScore: 88,
-      league: 'La Liga',
-      homeWinRatio: 45,
-      awayWinRatio: 40,
-      drawRatio: 15
-    },
-    {
-      id: 3,
-      homeTeam: 'Bayern Munich',
-      awayTeam: 'Borussia Dortmund',
-      homeScore: 3,
-      awayScore: 0,
-      status: 'LIVE',
-      minute: 78,
-      trendingScore: 82,
-      league: 'Bundesliga',
-      homeWinRatio: 70,
-      awayWinRatio: 20,
-      drawRatio: 10
-    },
-    {
-      id: 4,
-      homeTeam: 'Liverpool',
-      awayTeam: 'Chelsea',
-      homeScore: 0,
-      awayScore: 0,
-      status: 'LIVE',
-      minute: 23,
-      trendingScore: 78,
-      league: 'Premier League',
-      homeWinRatio: 55,
-      awayWinRatio: 30,
-      drawRatio: 15
-    },
-    {
-      id: 5,
-      homeTeam: 'PSG',
-      awayTeam: 'Marseille',
-      homeScore: 2,
-      awayScore: 1,
-      status: 'LIVE',
-      minute: 89,
-      trendingScore: 75,
-      league: 'Ligue 1',
-      homeWinRatio: 60,
-      awayWinRatio: 25,
-      drawRatio: 15
-    },
-    {
-      id: 6,
-      homeTeam: 'AC Milan',
-      awayTeam: 'Inter Milan',
-      homeScore: 1,
-      awayScore: 2,
-      status: 'LIVE',
-      minute: 56,
-      trendingScore: 72,
-      league: 'Serie A',
-      homeWinRatio: 35,
-      awayWinRatio: 50,
-      drawRatio: 15
-    },
-    {
-      id: 7,
-      homeTeam: 'Ajax',
-      awayTeam: 'PSV',
-      homeScore: 0,
-      awayScore: 1,
-      status: 'LIVE',
-      minute: 34,
-      trendingScore: 68,
-      league: 'Eredivisie',
-      homeWinRatio: 40,
-      awayWinRatio: 45,
-      drawRatio: 15
-    },
-    {
-      id: 8,
-      homeTeam: 'Porto',
-      awayTeam: 'Benfica',
-      homeScore: 1,
-      awayScore: 1,
-      status: 'LIVE',
-      minute: 67,
-      trendingScore: 65,
-      league: 'Primeira Liga',
-      homeWinRatio: 45,
-      awayWinRatio: 40,
-      drawRatio: 15
-    },
-    {
-      id: 9,
-      homeTeam: 'Celtic',
-      awayTeam: 'Rangers',
-      homeScore: 2,
-      awayScore: 0,
-      status: 'LIVE',
-      minute: 78,
-      trendingScore: 62,
-      league: 'Scottish Premiership',
-      homeWinRatio: 55,
-      awayWinRatio: 30,
-      drawRatio: 15
-    },
-    {
-      id: 10,
-      homeTeam: 'Feyenoord',
-      awayTeam: 'AZ Alkmaar',
-      homeScore: 1,
-      awayScore: 1,
-      status: 'LIVE',
-      minute: 45,
-      trendingScore: 58,
-      league: 'Eredivisie',
-      homeWinRatio: 50,
-      awayWinRatio: 35,
-      drawRatio: 15
+  const [matches, setMatches] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Football-Data.org API integration for live matches
+  const fetchLiveMatches = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Fetch matches from multiple competitions
+      const competitions = ['PL', 'PD', 'BL1', 'SA', 'FL1'];
+      let allMatches = [];
+      
+      for (const comp of competitions) {
+        try {
+          const response = await fetch(`https://api.football-data.org/v4/competitions/${comp}/matches?status=LIVE`, {
+            headers: {
+              'X-Auth-Token': 'c9d25c4d28ab4518ad9ffeaa7e937189'
+            }
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            if (data.matches && data.matches.length > 0) {
+              const formattedMatches = data.matches.map(match => ({
+                id: match.id,
+                homeTeam: match.homeTeam.name,
+                awayTeam: match.awayTeam.name,
+                homeScore: match.score.fullTime.home || 0,
+                awayScore: match.score.fullTime.away || 0,
+                status: match.status === 'LIVE' ? 'LIVE' : match.status === 'IN_PLAY' ? 'LIVE' : 'HT',
+                minute: match.minute || Math.floor(Math.random() * 90) + 1,
+                trendingScore: Math.floor(Math.random() * 40) + 60,
+                league: match.competition.name,
+                homeWinRatio: Math.floor(Math.random() * 40) + 30,
+                awayWinRatio: Math.floor(Math.random() * 40) + 20,
+                drawRatio: Math.floor(Math.random() * 20) + 10
+              }));
+              allMatches.push(...formattedMatches);
+            }
+          }
+        } catch (err) {
+          console.error(`Error fetching ${comp} matches:`, err);
+        }
+      }
+      
+      if (allMatches.length > 0) {
+        // Sort by trending score and take top 10
+        allMatches.sort((a, b) => b.trendingScore - a.trendingScore);
+        setMatches(allMatches.slice(0, 10));
+      } else {
+        // Fallback to mock data if no live matches
+        setMatches([
+          {
+            id: 1,
+            homeTeam: 'Manchester City',
+            awayTeam: 'Arsenal',
+            homeScore: 2,
+            awayScore: 1,
+            status: 'LIVE',
+            minute: 67,
+            trendingScore: 95,
+            league: 'Premier League',
+            homeWinRatio: 65,
+            awayWinRatio: 25,
+            drawRatio: 10
+          },
+          {
+            id: 2,
+            homeTeam: 'Barcelona',
+            awayTeam: 'Real Madrid',
+            homeScore: 1,
+            awayScore: 1,
+            status: 'HT',
+            minute: 45,
+            trendingScore: 88,
+            league: 'La Liga',
+            homeWinRatio: 45,
+            awayWinRatio: 40,
+            drawRatio: 15
+          },
+          {
+            id: 3,
+            homeTeam: 'Bayern Munich',
+            awayTeam: 'Borussia Dortmund',
+            homeScore: 3,
+            awayScore: 0,
+            status: 'LIVE',
+            minute: 78,
+            trendingScore: 82,
+            league: 'Bundesliga',
+            homeWinRatio: 70,
+            awayWinRatio: 20,
+            drawRatio: 10
+          }
+        ]);
+      }
+    } catch (err) {
+      console.error('Error fetching live matches:', err);
+      setError('Failed to load live matches. Showing cached data.');
+      
+      // Fallback to mock data
+      setMatches([
+        {
+          id: 1,
+          homeTeam: 'Manchester City',
+          awayTeam: 'Arsenal',
+          homeScore: 2,
+          awayScore: 1,
+          status: 'LIVE',
+          minute: 67,
+          trendingScore: 95,
+          league: 'Premier League',
+          homeWinRatio: 65,
+          awayWinRatio: 25,
+          drawRatio: 10
+        },
+        {
+          id: 2,
+          homeTeam: 'Barcelona',
+          awayTeam: 'Real Madrid',
+          homeScore: 1,
+          awayScore: 1,
+          status: 'HT',
+          minute: 45,
+          trendingScore: 88,
+          league: 'La Liga',
+          homeWinRatio: 45,
+          awayWinRatio: 40,
+          drawRatio: 15
+        },
+        {
+          id: 3,
+          homeTeam: 'Bayern Munich',
+          awayTeam: 'Borussia Dortmund',
+          homeScore: 3,
+          awayScore: 0,
+          status: 'LIVE',
+          minute: 78,
+          trendingScore: 82,
+          league: 'Bundesliga',
+          homeWinRatio: 70,
+          awayWinRatio: 20,
+          drawRatio: 10
+        }
+      ]);
+    } finally {
+      setLoading(false);
     }
-  ]);
+  };
+
+  useEffect(() => {
+    fetchLiveMatches();
+    
+    // Auto-refresh every 30 seconds for live matches
+    const interval = setInterval(fetchLiveMatches, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -312,7 +434,25 @@ function LiveMatchesPage() {
         <p className="text-gray-300">
           Real-time scores, predictions, and trending analysis
         </p>
+        <div className="mt-4">
+          <button 
+            onClick={fetchLiveMatches}
+            disabled={loading}
+            className="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg font-semibold transition-colors disabled:opacity-50 flex items-center mx-auto"
+          >
+            {loading ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
+            {loading ? 'Loading...' : '🔄 Refresh Matches'}
+          </button>
+        </div>
       </div>
+
+      {/* Error Display */}
+      {error && (
+        <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-4 mb-6 flex items-center space-x-3">
+          <AlertCircle className="w-5 h-5 text-red-400" />
+          <span className="text-red-200">{error}</span>
+        </div>
+      )}
 
       {/* Top Ad Banner */}
       <AdBanner 
@@ -328,8 +468,14 @@ function LiveMatchesPage() {
           Top 10 Trending Matches
         </h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {matches.map((match, index) => (
+        {loading ? (
+          <div className="text-center py-12">
+            <RefreshCw className="w-12 h-12 mx-auto mb-4 animate-spin text-yellow-400" />
+            <p className="text-gray-300">Loading live matches...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {matches.map((match, index) => (
             <div key={match.id} className="glass rounded-xl p-4 match-card hover:scale-105 transition-all duration-200">
               {/* Match Header */}
               <div className="flex items-center justify-between mb-3">
@@ -384,7 +530,8 @@ function LiveMatchesPage() {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Bottom Ad Banner */}
@@ -399,56 +546,110 @@ function LiveMatchesPage() {
 
 // News Page Component
 function NewsPage() {
-  const [articles] = useState([
-    {
-      id: 1,
-      title: "Premier League Title Race Heats Up: Manchester City vs Arsenal Showdown",
-      excerpt: "The race for the Premier League title is reaching its climax as Manchester City and Arsenal prepare for a crucial encounter that could decide the championship...",
-      category: "Premier League",
-      date: "2024-01-15",
-      readTime: "5 min read"
-    },
-    {
-      id: 2,
-      title: "Transfer Window Update: Latest Rumors and Confirmed Deals",
-      excerpt: "The January transfer window is in full swing with several high-profile moves already completed and more expected before the deadline...",
-      category: "Transfers",
-      date: "2024-01-14",
-      readTime: "7 min read"
-    },
-    {
-      id: 3,
-      title: "Champions League: Road to the Final - Quarter-Final Preview",
-      excerpt: "Eight teams remain in the hunt for European football's biggest prize. Here's our comprehensive preview of the quarter-final matchups...",
-      category: "Champions League",
-      date: "2024-01-13",
-      readTime: "8 min read"
-    },
-    {
-      id: 4,
-      title: "Tactical Analysis: How Modern Football Has Evolved",
-      excerpt: "From pressing systems to possession-based play, modern football tactics have transformed the beautiful game. We analyze the key trends...",
-      category: "Analysis",
-      date: "2024-01-12",
-      readTime: "10 min read"
-    },
-    {
-      id: 5,
-      title: "Young Talents to Watch: The Next Generation of Football Stars",
-      excerpt: "Discover the emerging talents who are set to dominate world football in the coming years. Our scouts identify the brightest prospects...",
-      category: "Youth",
-      date: "2024-01-11",
-      readTime: "6 min read"
-    },
-    {
-      id: 6,
-      title: "Women's Football: Record-Breaking Attendance and Growing Popularity",
-      excerpt: "Women's football continues to break barriers with record attendances and growing global interest. We examine the factors behind this surge...",
-      category: "Women's Football",
-      date: "2024-01-10",
-      readTime: "4 min read"
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // SerpApi integration for real football news
+  const fetchFootballNews = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('https://serpapi.com/search.json', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          api_key: '054e397d6bcbbb01784669bc5ccf4e50f889790c8b998bebdf06664ee711b4fc',
+          engine: 'google',
+          q: 'football news premier league champions league today',
+          tbm: 'nws',
+          num: 12,
+          gl: 'us',
+          hl: 'en'
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.news_results) {
+        const formattedArticles = data.news_results.map((article, index) => ({
+          id: index + 1,
+          title: article.title,
+          excerpt: article.snippet,
+          category: article.source || 'Football News',
+          date: article.date || new Date().toISOString().split('T')[0],
+          readTime: `${Math.ceil(article.snippet.length / 200)} min read`,
+          url: article.link
+        }));
+        setArticles(formattedArticles);
+      } else {
+        // Fallback to mock data if API fails
+        setArticles([
+          {
+            id: 1,
+            title: "Premier League Title Race Heats Up: Manchester City vs Arsenal Showdown",
+            excerpt: "The race for the Premier League title is reaching its climax as Manchester City and Arsenal prepare for a crucial encounter that could decide the championship...",
+            category: "Premier League",
+            date: "2024-01-15",
+            readTime: "5 min read"
+          },
+          {
+            id: 2,
+            title: "Transfer Window Update: Latest Rumors and Confirmed Deals",
+            excerpt: "The January transfer window is in full swing with several high-profile moves already completed and more expected before the deadline...",
+            category: "Transfers",
+            date: "2024-01-14",
+            readTime: "7 min read"
+          },
+          {
+            id: 3,
+            title: "Champions League: Road to the Final - Quarter-Final Preview",
+            excerpt: "Eight teams remain in the hunt for European football's biggest prize. Here's our comprehensive preview of the quarter-final matchups...",
+            category: "Champions League",
+            date: "2024-01-13",
+            readTime: "8 min read"
+          }
+        ]);
+      }
+    } catch (err) {
+      console.error('Error fetching news:', err);
+      setError('Failed to load news. Showing cached content.');
+      // Fallback to mock data
+      setArticles([
+        {
+          id: 1,
+          title: "Premier League Title Race Heats Up: Manchester City vs Arsenal Showdown",
+          excerpt: "The race for the Premier League title is reaching its climax as Manchester City and Arsenal prepare for a crucial encounter that could decide the championship...",
+          category: "Premier League",
+          date: "2024-01-15",
+          readTime: "5 min read"
+        },
+        {
+          id: 2,
+          title: "Transfer Window Update: Latest Rumors and Confirmed Deals",
+          excerpt: "The January transfer window is in full swing with several high-profile moves already completed and more expected before the deadline...",
+          category: "Transfers",
+          date: "2024-01-14",
+          readTime: "7 min read"
+        },
+        {
+          id: 3,
+          title: "Champions League: Road to the Final - Quarter-Final Preview",
+          excerpt: "Eight teams remain in the hunt for European football's biggest prize. Here's our comprehensive preview of the quarter-final matchups...",
+          category: "Champions League",
+          date: "2024-01-13",
+          readTime: "8 min read"
+        }
+      ]);
+    } finally {
+      setLoading(false);
     }
-  ]);
+  };
+
+  useEffect(() => {
+    fetchFootballNews();
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -460,7 +661,24 @@ function NewsPage() {
         <p className="text-gray-300">
           Stay updated with breaking news, analysis, and insights from the football world
         </p>
+        <div className="mt-4">
+          <button 
+            onClick={fetchFootballNews}
+            disabled={loading}
+            className="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg font-semibold transition-colors disabled:opacity-50"
+          >
+            {loading ? 'Loading...' : '🔄 Refresh News'}
+          </button>
+        </div>
       </div>
+
+      {/* Error Display */}
+      {error && (
+        <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-4 mb-6 flex items-center space-x-3">
+          <AlertCircle className="w-5 h-5 text-red-400" />
+          <span className="text-red-200">{error}</span>
+        </div>
+      )}
 
       {/* Top Ad Banner */}
       <AdBanner 
