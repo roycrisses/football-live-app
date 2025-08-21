@@ -11,9 +11,9 @@ function TransferNews() {
       </div>
 
       <div className="text-center py-12">
-        <Clock className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">Coming Soon</h3>
-        <p className="text-gray-600">This feature is under development. Please check back later!</p>
+        <Clock className="w-16 h-16 mx-auto mb-4 ds-text-muted" />
+        <h3 className="text-xl font-semibold mb-2">Coming Soon</h3>
+        <p className="ds-secondary">This feature is under development. Please check back later!</p>
       </div>
     </div>
   );

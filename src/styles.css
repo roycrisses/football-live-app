@@ -4,17 +4,16 @@
   }
   
   :root {
-    /* Protech Store Design System tokens from UI.JSON */
-    --ds-bg: #0A0A0A;
-    --ds-surface: #1A1A1A;
-    --ds-surface-elev: #2A2A2A;
+    --ds-bg: #121212;
+    --ds-surface: #1E1E1E;
+    --ds-surface-elev: #282828;
     --ds-border: #333333;
     --ds-border-light: #404040;
-    --ds-text: #ff0000;
-    --ds-text-secondary: #00f9f1;
-    --ds-text-muted: #999999;
-    --ds-disabled: #666666;
-    --ds-accent-yellow: #F4D03F;
+    --ds-text: #FFFFFF;
+    --ds-text-secondary: #A0A0A0;
+    --ds-text-muted: #606060;
+    --ds-disabled: #404040;
+    --ds-accent-yellow: #3498DB;
     --ds-accent-green: #2ECC71;
     --ds-accent-blue: #3498DB;
     --ds-success: #2ECC71;
@@ -78,15 +77,15 @@
     border: 1px solid var(--ds-border);
   }
   .ds-chip-active {
-    background: var(--ds-accent-yellow);
-    color: #000;
-    border: 1px solid #D4AF37;
+    background: var(--ds-accent-blue);
+    color: #FFFFFF;
+    border: 1px solid var(--ds-accent-blue);
   }
 
   .ds-btn-primary {
-    background: var(--ds-accent-yellow);
-    color: #000 !important;
-    border: 1px solid #D4AF37;
+    background: var(--ds-accent-blue);
+    color: #FFFFFF !important;
+    border: 1px solid var(--ds-accent-blue);
   }
   .ds-btn-outline {
     background: transparent;
@@ -109,10 +108,10 @@
   /* Enhanced animations */
   @keyframes glow {
     0%, 100% {
-      box-shadow: 0 0 5px rgba(251, 191, 36, 0.5);
+      box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
     }
     50% {
-      box-shadow: 0 0 20px rgba(251, 191, 36, 0.8), 0 0 30px rgba(251, 191, 36, 0.5);
+      box-shadow: 0 0 20px rgba(52, 152, 219, 0.8), 0 0 30px rgba(52, 152, 219, 0.5);
     }
   }
   
@@ -122,7 +121,7 @@
   
   /* Loading states */
   .loading-skeleton {
-    background: linear-gradient(90deg, #6bed7c 25%, #89f49b 50%, #a6f18f 75%);
+    background: linear-gradient(90deg, #2c3e50 25%, #34495e 50%, #2c3e50 75%);
     background-size: 200% 100%;
     animation: loading 1.5s infinite;
   }
@@ -139,12 +138,12 @@
   /* Score animations */
   @keyframes scoreFlash {
     0%, 100% {
-      color: #fbbf24;
+      color: #3498DB;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
     }
     50% {
       color: #ffffff;
-      text-shadow: 0 0 10px rgba(251, 191, 36, 0.8);
+      text-shadow: 0 0 10px rgba(52, 152, 219, 0.8);
     }
   }
   
@@ -165,7 +164,7 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
     animation: shimmer 2s infinite;
   }
   
@@ -192,7 +191,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
     opacity: 0;
     transition: opacity 0.3s ease;
   }
@@ -213,7 +212,7 @@
   
   /* Win ratio prediction bar styles */
   .win-prediction-bar {
-    background: linear-gradient(90deg, #10b981, #059669, #047857);
+    background: linear-gradient(90deg, #3498db, #2980b9, #2c3e50);
     height: 100%;
     border-radius: 9999px;
     transition: width 0.5s ease;
@@ -228,7 +227,7 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
     animation: predictionShine 3s infinite;
   }
   
@@ -248,17 +247,17 @@
   
   @keyframes trophyGlow {
     0%, 100% {
-      filter: drop-shadow(0 0 5px rgba(251, 191, 36, 0.5));
+      filter: drop-shadow(0 0 5px rgba(52, 152, 219, 0.5));
     }
     50% {
-      filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.8));
+      filter: drop-shadow(0 0 15px rgba(52, 152, 219, 0.8));
     }
   }
   
   /* Ranking number styles */
   .ranking-number {
-    background: linear-gradient(135deg, #fbbf24, #f59e0b);
-    color: #000;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: #FFFFFF;
     padding: 2px 6px;
     border-radius: 12px;
     font-weight: bold;
@@ -286,44 +285,44 @@
   }
   
   ::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
   }
   
   ::-webkit-scrollbar-thumb {
-    background: rgba(251, 191, 36, 0.5);
+    background: rgba(52, 152, 219, 0.5);
     border-radius: 4px;
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(251, 191, 36, 0.7);
+    background: rgba(52, 152, 219, 0.7);
   }
   
   /* Focus states for accessibility */
   button:focus,
   .match-card:focus {
-    outline: 2px solid #fbbf24;
+    outline: 2px solid #3498DB;
     outline-offset: 2px;
   }
   
   /* Error state styling */
   .error-state {
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    color: #fca5a5;
+    background: rgba(231, 76, 60, 0.1);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    color: #e74c3c;
   }
   
   /* Success state styling */
   .success-state {
-    background: rgba(34, 197, 94, 0.1);
-    border: 1px solid rgba(34, 197, 94, 0.3);
-    color: #86efac;
+    background: rgba(46, 204, 113, 0.1);
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    color: #2ecc71;
   }
   
   /* League badge styling */
   .league-badge {
-    background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.2));
-    border: 1px solid rgba(251, 191, 36, 0.3);
-    color: #fbbf24;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.2), rgba(41, 128, 185, 0.2));
+    border: 1px solid rgba(52, 152, 219, 0.3);
+    color: #3498DB;
   }
   
   /* Status indicator enhancements */
@@ -339,7 +338,7 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
     transition: left 0.5s;
   }
   
@@ -365,31 +364,31 @@
   
   /* Click hint styling */
   .click-hint {
-    background: rgba(251, 191, 36, 0.1);
-    border: 1px solid rgba(251, 191, 36, 0.2);
-    color: #fbbf24;
+    background: rgba(52, 152, 219, 0.1);
+    border: 1px solid rgba(52, 152, 219, 0.2);
+    color: #3498DB;
     transition: all 0.3s ease;
   }
   
   .match-card:hover .click-hint {
-    background: rgba(251, 191, 36, 0.2);
-    border-color: rgba(251, 191, 36, 0.4);
+    background: rgba(52, 152, 219, 0.2);
+    border-color: rgba(52, 152, 219, 0.4);
   }
   
   /* Win ratio text styling */
   .win-ratio-text {
     font-size: 0.75rem;
-    color: #b90000;
+    color: #A0A0A0;
     transition: color 0.3s ease;
   }
   
   .match-card:hover .win-ratio-text {
-    color: #0700d1;
+    color: #FFFFFF;
   }
   
   /* Prediction bar container */
   .prediction-container {
-    background: rgba(31, 41, 55, 0.8);
+    background: rgba(30, 30, 30, 0.8);
     border-radius: 8px;
     padding: 8px;
     margin-top: 8px;
@@ -399,8 +398,8 @@
   .loading-spinner {
     width: 40px;
     height: 40px;
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    border-top: 4px solid #fbbf24;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    border-top: 4px solid #3498DB;
     border-radius: 50%;
     animation: spin 1s linear infinite;
   }

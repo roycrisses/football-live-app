@@ -87,18 +87,18 @@ function LeagueTable() {
 
   const getFormColor = (result) => {
     switch (result) {
-      case 'W': return 'bg-green-500';
-      case 'D': return 'bg-yellow-500';
-      case 'L': return 'bg-red-500';
-      default: return 'bg-gray-500';
+      case 'W': return 'bg-ds-success';
+      case 'D': return 'bg-ds-warning';
+      case 'L': return 'bg-ds-error';
+      default: return 'bg-ds-text-muted';
     }
   };
 
   const getPositionClass = (position) => {
-    if (position <= 4) return 'bg-green-500/20 border-green-500/30';
-    if (position <= 6) return 'bg-blue-500/20 border-blue-500/30';
-    if (position <= 17) return 'bg-yellow-500/20 border-yellow-500/30';
-    return 'bg-red-500/20 border-red-500/30';
+    if (position <= 4) return 'bg-ds-success/20 border-ds-success/30';
+    if (position <= 6) return 'bg-ds-info/20 border-ds-info/30';
+    if (position <= 17) return 'bg-ds-warning/20 border-ds-warning/30';
+    return 'bg-ds-error/20 border-ds-error/30';
   };
 
   const currentStandings = standings[leagues[selectedLeague]?.id] || [];
@@ -127,9 +127,9 @@ function LeagueTable() {
 
       {/* Error Display */}
       {error && (
-        <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-4 mb-6 flex items-center space-x-3">
-          <AlertCircle className="w-5 h-5 text-red-400" />
-          <span className="text-red-200">{error}</span>
+        <div className="error-state rounded-lg p-4 mb-6 flex items-center space-x-3">
+          <AlertCircle className="w-5 h-5" />
+          <span>{error}</span>
         </div>
       )}
 
@@ -160,13 +160,13 @@ function LeagueTable() {
         
         {loading ? (
           <div className="text-center py-12">
-            <RefreshCw className="w-12 h-12 mx-auto mb-4 animate-spin text-yellow-400" />
-            <p className="text-gray-300">Loading league standings...</p>
+            <RefreshCw className="w-12 h-12 mx-auto mb-4 animate-spin text-ds-accent-blue" />
+            <p className="ds-secondary">Loading league standings...</p>
           </div>
         ) : currentStandings.length > 0 ? (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b" style={{borderColor:'var(--ds-border)'}}>
+              <tr className="border-b border-ds-border">
                 <th className="text-left py-3 px-2 ds-secondary font-medium">Pos</th>
                 <th className="text-left py-3 px-2 ds-secondary font-medium">Team</th>
                 <th className="text-center py-3 px-2 ds-secondary font-medium">P</th>
@@ -182,31 +182,31 @@ function LeagueTable() {
             </thead>
             <tbody>
               {currentStandings.map((team) => (
-                <tr key={team.team} className="border-b border-white/10 hover:bg-white/5">
+                <tr key={team.team} className="border-b border-ds-border hover:bg-ds-surface-elev">
                   <td className="py-3 px-2">
                     <div className={`inline-flex items-center justify-center w-8 h-8 rounded-full border ${getPositionClass(team.position)}`}>
-                      <span className="text-white font-bold text-sm">{team.position}</span>
+                      <span className="font-bold text-sm">{team.position}</span>
                     </div>
                   </td>
                   <td className="py-3 px-2">
                     <div className="flex items-center space-x-3">
-                      <span className="text-white font-medium">{team.team}</span>
-                      {team.position <= 4 && <Trophy className="w-4 h-4 text-yellow-400" />}
+                      <span className="font-medium">{team.team}</span>
+                      {team.position <= 4 && <Trophy className="w-4 h-4 text-ds-accent-yellow" />}
                     </div>
                   </td>
-                  <td className="py-3 px-2 text-center text-gray-300">{team.played}</td>
-                  <td className="py-3 px-2 text-center text-gray-300">{team.won}</td>
-                  <td className="py-3 px-2 text-center text-gray-300">{team.drawn}</td>
-                  <td className="py-3 px-2 text-center text-gray-300">{team.lost}</td>
-                  <td className="py-3 px-2 text-center text-gray-300">{team.goalsFor}</td>
-                  <td className="py-3 px-2 text-center text-gray-300">{team.goalsAgainst}</td>
+                  <td className="py-3 px-2 text-center ds-secondary">{team.played}</td>
+                  <td className="py-3 px-2 text-center ds-secondary">{team.won}</td>
+                  <td className="py-3 px-2 text-center ds-secondary">{team.drawn}</td>
+                  <td className="py-3 px-2 text-center ds-secondary">{team.lost}</td>
+                  <td className="py-3 px-2 text-center ds-secondary">{team.goalsFor}</td>
+                  <td className="py-3 px-2 text-center ds-secondary">{team.goalsAgainst}</td>
                   <td className="py-3 px-2 text-center">
-                    <span className={`font-medium ${team.goalDifference > 0 ? 'text-green-400' : team.goalDifference < 0 ? 'text-red-400' : 'text-gray-300'}`}>
+                    <span className={`font-medium ${team.goalDifference > 0 ? 'text-ds-success' : team.goalDifference < 0 ? 'text-ds-error' : 'ds-secondary'}`}>
                       {team.goalDifference > 0 ? '+' : ''}{team.goalDifference}
                     </span>
                   </td>
                   <td className="py-3 px-2 text-center">
-                    <span className="text-white font-bold">{team.points}</span>
+                    <span className="font-bold">{team.points}</span>
                   </td>
                   <td className="py-3 px-2">
                     <div className="flex space-x-1 justify-center">
@@ -227,34 +227,34 @@ function LeagueTable() {
           </table>
         ) : (
           <div className="text-center py-12">
-            <Trophy className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-            <p className="text-gray-300">No standings available for this league.</p>
+            <Trophy className="w-12 h-12 mx-auto mb-4 text-ds-text-muted" />
+            <p className="ds-secondary">No standings available for this league.</p>
           </div>
         )}
       </div>
 
       {/* Table Legend */}
-      <div className="glass rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Table Legend</h3>
+      <div className="ds-card rounded-xl p-6">
+        <h3 className="text-lg font-semibold mb-4">Table Legend</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-green-500/20 border border-green-500/30 rounded-full"></div>
-              <span className="text-gray-300">Champions League Qualification</span>
+              <div className="w-4 h-4 bg-ds-success/20 border border-ds-success/30 rounded-full"></div>
+              <span className="ds-secondary">Champions League Qualification</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-blue-500/20 border border-blue-500/30 rounded-full"></div>
-              <span className="text-gray-300">Europa League Qualification</span>
+              <div className="w-4 h-4 bg-ds-info/20 border border-ds-info/30 rounded-full"></div>
+              <span className="ds-secondary">Europa League Qualification</span>
             </div>
           </div>
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-yellow-500/20 border border-yellow-500/30 rounded-full"></div>
-              <span className="text-gray-300">Mid-table Safety</span>
+              <div className="w-4 h-4 bg-ds-warning/20 border border-ds-warning/30 rounded-full"></div>
+              <span className="ds-secondary">Mid-table Safety</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-red-500/20 border border-red-500/30 rounded-full"></div>
-              <span className="text-gray-300">Relegation Zone</span>
+              <div className="w-4 h-4 bg-ds-error/20 border border-ds-error/30 rounded-full"></div>
+              <span className="ds-secondary">Relegation Zone</span>
             </div>
           </div>
         </div>
