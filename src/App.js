@@ -3,8 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import { 
   TrendingUp, Clock, Users, AlertCircle, RefreshCw, Zap, Trophy, Target, Home, 
   Newspaper, BarChart3, Info, Menu, X, Table, RefreshCw as TransferIcon,
-  Search, Settings, Notifications, Person, SportsSoccer, SportsBasketball, 
-  SportsTennis, Circle, Star, TrendingDown, Award, Users2, Globe, Filter, ChevronRight,
+  Search, Settings, Notifications, Person, Circle, Star, TrendingDown, Award, Users2, Globe, Filter, ChevronRight,
   Play, Pause, Eye, Heart, Share2, Bookmark, MoreHorizontal
 } from 'lucide-react';
 import AdBanner from './AdBanner';
@@ -20,12 +19,12 @@ function Navigation() {
 
   const sports = [
     { id: 'all', name: 'All Sports', icon: Globe, color: 'from-blue-500 to-purple-600' },
-    { id: 'soccer', name: 'Football', icon: SportsSoccer, color: 'from-green-500 to-green-600' },
-    { id: 'basketball', name: 'Basketball', icon: SportsBasketball, color: 'from-orange-500 to-orange-600' },
-    { id: 'tennis', name: 'Tennis', icon: SportsTennis, color: 'from-yellow-500 to-yellow-600' },
-    { id: 'hockey', name: 'Hockey', icon: SportsSoccer, color: 'from-blue-500 to-blue-600' },
-    { id: 'cricket', name: 'Cricket', icon: SportsSoccer, color: 'from-purple-500 to-purple-600' },
-    { id: 'rugby', name: 'Rugby', icon: SportsSoccer, color: 'from-red-500 to-red-600' }
+    { id: 'soccer', name: 'Football', icon: Circle, color: 'from-green-500 to-green-600' },
+    { id: 'basketball', name: 'Basketball', icon: Circle, color: 'from-orange-500 to-orange-600' },
+    { id: 'tennis', name: 'Tennis', icon: Circle, color: 'from-yellow-500 to-yellow-600' },
+    { id: 'hockey', name: 'Hockey', icon: Circle, color: 'from-blue-500 to-blue-600' },
+    { id: 'cricket', name: 'Cricket', icon: Circle, color: 'from-purple-500 to-purple-600' },
+    { id: 'rugby', name: 'Rugby', icon: Circle, color: 'from-red-500 to-red-600' }
   ];
 
   const navItems = [
@@ -362,10 +361,10 @@ function HomePage() {
 
   const getSportIcon = (sport) => {
     switch (sport) {
-      case 'soccer': return <SportsSoccer className="w-5 h-5" />;
-      case 'basketball': return <SportsBasketball className="w-5 h-5" />;
-      case 'tennis': return <SportsTennis className="w-5 h-5" />;
-      default: return <SportsSoccer className="w-5 h-5" />;
+      case 'soccer': return <Circle className="w-5 h-5" />;
+      case 'basketball': return <Circle className="w-5 h-5" />;
+      case 'tennis': return <Circle className="w-5 h-5" />;
+      default: return <Circle className="w-5 h-5" />;
     }
   };
 
@@ -725,10 +724,10 @@ function LiveMatchesPage() {
 
   const getSportIcon = (sport) => {
     switch (sport) {
-      case 'soccer': return <SportsSoccer className="w-5 h-5" />;
-      case 'basketball': return <SportsBasketball className="w-5 h-5" />;
-      case 'tennis': return <SportsTennis className="w-5 h-5" />;
-      default: return <SportsSoccer className="w-5 h-5" />;
+      case 'soccer': return <Circle className="w-5 h-5" />;
+      case 'basketball': return <Circle className="w-5 h-5" />;
+      case 'tennis': return <Circle className="w-5 h-5" />;
+      default: return <Circle className="w-5 h-5" />;
     }
   };
 
@@ -743,9 +742,9 @@ function LiveMatchesPage() {
 
   const sports = [
     { id: 'all', name: 'All Sports', icon: Globe },
-    { id: 'soccer', name: 'Football', icon: SportsSoccer },
-    { id: 'basketball', name: 'Basketball', icon: SportsBasketball },
-    { id: 'tennis', name: 'Tennis', icon: SportsTennis }
+    { id: 'soccer', name: 'Football', icon: Circle },
+    { id: 'basketball', name: 'Basketball', icon: Circle },
+    { id: 'tennis', name: 'Tennis', icon: Circle }
   ];
 
   return (
@@ -1152,9 +1151,9 @@ function StatisticsPage() {
                   player.sport === 'soccer' ? 'bg-green-100' : 
                   player.sport === 'basketball' ? 'bg-orange-100' : 'bg-yellow-100'
                 }`}>
-                  {player.sport === 'soccer' ? <SportsSoccer className="w-5 h-5 text-green-600" /> :
-                   player.sport === 'basketball' ? <SportsBasketball className="w-5 h-5 text-orange-600" /> :
-                   <SportsTennis className="w-5 h-5 text-yellow-600" />}
+                  {player.sport === 'soccer' ? <Circle className="w-5 h-5 text-green-600" /> :
+                   player.sport === 'basketball' ? <Circle className="w-5 h-5 text-orange-600" /> :
+                   <Circle className="w-5 h-5 text-yellow-600" />}
                 </div>
               </div>
               
@@ -1235,8 +1234,8 @@ function StatisticsPage() {
                       <div className={`inline-flex p-1 rounded ${
                         team.sport === 'soccer' ? 'bg-green-100' : 'bg-orange-100'
                       }`}>
-                        {team.sport === 'soccer' ? <SportsSoccer className="w-4 h-4 text-green-600" /> :
-                         <SportsBasketball className="w-4 h-4 text-orange-600" />}
+                        {team.sport === 'soccer' ? <Circle className="w-4 h-4 text-green-600" /> :
+                         <Circle className="w-4 h-4 text-orange-600" />}
                       </div>
                     </td>
                   </tr>
