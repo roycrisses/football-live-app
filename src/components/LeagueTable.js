@@ -155,20 +155,14 @@ function LeagueTable() {
         <p className="text-gray-300">
           Real-time standings from ESPN API (Free & Public)
         </p>
-        <div className="mt-4 flex justify-center space-x-4">
+        <div className="mt-4">
           <button 
             onClick={() => fetchLeagueStandings(leagues[selectedLeague]?.id)}
             disabled={loading}
-            className="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg font-semibold transition-colors disabled:opacity-50 flex items-center"
+            className="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg font-semibold transition-colors disabled:opacity-50 flex items-center mx-auto"
           >
             {loading ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
             {loading ? 'Loading...' : '🔄 Refresh Data'}
-          </button>
-          <button 
-            onClick={testAPIConnection}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors flex items-center"
-          >
-            🔧 Test ESPN API
           </button>
         </div>
       </div>
