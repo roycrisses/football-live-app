@@ -321,42 +321,7 @@ function HomePage() {
       if (allMatches.length > 0) {
         setFeaturedMatches(allMatches.slice(0, 6));
       } else {
-        // Fallback matches
-        setFeaturedMatches([
-    {
-      id: 1,
-            sport: 'soccer',
-      homeTeam: 'Manchester City',
-      awayTeam: 'Arsenal',
-      homeScore: 2,
-      awayScore: 1,
-      status: 'LIVE',
-      minute: 67,
-            league: 'Premier League'
-    },
-    {
-      id: 2,
-            sport: 'basketball',
-            homeTeam: 'Lakers',
-            awayTeam: 'Warriors',
-            homeScore: 105,
-            awayScore: 98,
-            status: 'LIVE',
-      minute: 45,
-            league: 'NBA'
-    },
-    {
-      id: 3,
-            sport: 'tennis',
-            homeTeam: 'Djokovic',
-            awayTeam: 'Nadal',
-            homeScore: 2,
-            awayScore: 1,
-      status: 'LIVE',
-      minute: 78,
-            league: 'Wimbledon'
-          }
-        ]);
+        setFeaturedMatches([]);
       }
     } catch (err) {
       console.error('Error fetching live matches:', err);
@@ -604,12 +569,8 @@ function LiveMatchesPage() {
                   status: match.status.type.state === 'in' ? 'LIVE' : 'HT',
                   minute: match.status.type.description?.includes('minute') ? 
                     parseInt(match.status.type.description.match(/\d+/)?.[0] || 0) : 
-                    Math.floor(Math.random() * 90) + 1,
-                  trendingScore: Math.floor(Math.random() * 40) + 60,
-                  league: match.league.name,
-                  homeWinRatio: Math.floor(Math.random() * 40) + 30,
-                  awayWinRatio: Math.floor(Math.random() * 40) + 20,
-                  drawRatio: Math.floor(Math.random() * 20) + 10
+                    0,
+                  league: match.league.name
                 }));
                 allMatches.push(...formattedMatches);
               }
