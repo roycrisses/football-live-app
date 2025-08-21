@@ -50,8 +50,19 @@ function LeagueTable() {
         ));
         
         if (soccerContent.length > 0) {
-          // This is a placeholder for actual data parsing
-          const tableData = []; 
+          const tableData = soccerContent.map(item => ({
+            position: item.position,
+            team: item.team,
+            played: item.played,
+            won: item.won,
+            drawn: item.drawn,
+            lost: item.lost,
+            goalsFor: item.goalsFor,
+            goalsAgainst: item.goalsAgainst,
+            goalDifference: item.goalDifference,
+            points: item.points,
+            form: item.form
+          }));
           
           setStandings(prev => ({
             ...prev,
