@@ -3,6 +3,26 @@
     box-sizing: border-box;
   }
   
+  :root {
+    /* Protech Store Design System tokens from UI.JSON */
+    --ds-bg: #0A0A0A;
+    --ds-surface: #1A1A1A;
+    --ds-surface-elev: #2A2A2A;
+    --ds-border: #333333;
+    --ds-border-light: #404040;
+    --ds-text: #FFFFFF;
+    --ds-text-secondary: #CCCCCC;
+    --ds-text-muted: #999999;
+    --ds-disabled: #666666;
+    --ds-accent-yellow: #F4D03F;
+    --ds-accent-green: #2ECC71;
+    --ds-accent-blue: #3498DB;
+    --ds-success: #2ECC71;
+    --ds-warning: #F39C12;
+    --ds-error: #E74C3C;
+    --ds-info: #3498DB;
+  }
+
   body {
     margin: 0;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,7 +30,8 @@
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--ds-bg);
+    color: var(--ds-text);
     min-height: 100vh;
   }
   
@@ -27,6 +48,58 @@
     border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   }
+
+  /* Design System helpers */
+  .ds-navbar {
+    background: var(--ds-surface) !important;
+    border-bottom: 1px solid var(--ds-border) !important;
+  }
+
+  .ds-card {
+    background: var(--ds-surface) !important;
+    border: 1px solid var(--ds-border) !important;
+    color: var(--ds-text) !important;
+  }
+
+  .ds-card-elev {
+    background: var(--ds-surface-elev) !important;
+    border: 1px solid var(--ds-border-light) !important;
+  }
+
+  .ds-input {
+    background: var(--ds-surface-elev) !important;
+    border: 1px solid var(--ds-border) !important;
+    color: var(--ds-text) !important;
+  }
+
+  .ds-chip {
+    background: var(--ds-surface-elev);
+    color: var(--ds-text-secondary);
+    border: 1px solid var(--ds-border);
+  }
+  .ds-chip-active {
+    background: var(--ds-accent-yellow);
+    color: #000;
+    border: 1px solid #D4AF37;
+  }
+
+  .ds-btn-primary {
+    background: var(--ds-accent-yellow);
+    color: #000 !important;
+    border: 1px solid #D4AF37;
+  }
+  .ds-btn-outline {
+    background: transparent;
+    color: var(--ds-text);
+    border: 1px solid var(--ds-border);
+  }
+  .ds-btn-ghost {
+    background: transparent;
+    color: var(--ds-text-secondary);
+  }
+
+  .ds-muted { color: var(--ds-text-muted); }
+  .ds-secondary { color: var(--ds-text-secondary); }
   
   /* Container responsive behavior */
   .container {

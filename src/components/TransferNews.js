@@ -193,29 +193,23 @@ function TransferNews() {
     <div className="space-y-8">
       {/* Page Header */}
       <div className="text-center py-8">
-        <h1 className="text-3xl font-bold text-white mb-4">
-          🔄 Transfer News & Rumors
-        </h1>
-        <p className="text-gray-300">
-          Latest transfer updates, confirmed deals, and transfer rumors
-        </p>
+        <h1 className="text-3xl font-bold mb-4">🔄 Transfer News & Rumors</h1>
+        <p className="ds-secondary">Latest transfer updates, confirmed deals, and transfer rumors</p>
       </div>
 
       {/* Filters */}
-      <div className="glass rounded-xl p-6">
+      <div className="ds-card rounded-xl p-6">
         <div className="flex flex-wrap gap-4 justify-center">
           {/* Category Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Category</label>
-            <div className="flex space-x-2 bg-white/10 rounded-lg p-1">
+            <label className="block text-sm font-medium ds-secondary mb-2">Category</label>
+            <div className="flex space-x-2 ds-card-elev rounded-lg p-1">
               {categories.map((category) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
                   className={`px-3 py-1 rounded-md text-sm transition-colors ${
-                    selectedCategory === category
-                      ? 'bg-yellow-500 text-black'
-                      : 'text-white hover:bg-white/10'
+                    selectedCategory === category ? 'ds-chip-active' : 'ds-chip'
                   }`}
                 >
                   {category}
@@ -226,16 +220,14 @@ function TransferNews() {
 
           {/* League Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">League</label>
-            <div className="flex space-x-2 bg-white/10 rounded-lg p-1">
+            <label className="block text-sm font-medium ds-secondary mb-2">League</label>
+            <div className="flex space-x-2 ds-card-elev rounded-lg p-1">
               {leagues.map((league) => (
                 <button
                   key={league}
                   onClick={() => setSelectedLeague(league)}
                   className={`px-3 py-1 rounded-md text-sm transition-colors ${
-                    selectedLeague === league
-                      ? 'bg-yellow-500 text-black'
-                      : 'text-white hover:bg-white/10'
+                    selectedLeague === league ? 'ds-chip-active' : 'ds-chip'
                   }`}
                 >
                   {league}
@@ -249,7 +241,7 @@ function TransferNews() {
       {/* Transfer List */}
       <div className="space-y-4">
         {filteredTransfers.map((transfer) => (
-          <div key={transfer.id} className="glass rounded-xl p-6 hover:scale-105 transition-transform">
+          <div key={transfer.id} className="ds-card rounded-xl p-6 hover:scale-105 transition-transform">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               {/* Transfer Info */}
               <div className="flex-1">
@@ -258,20 +250,20 @@ function TransferNews() {
                     {getStatusIcon(transfer.status)}
                     <span className="ml-1">{transfer.status}</span>
                   </span>
-                  <span className="text-gray-400 text-sm">{transfer.date}</span>
-                  <span className="text-gray-400 text-sm">•</span>
-                  <span className="text-gray-400 text-sm">{transfer.league}</span>
+                  <span className="ds-secondary text-sm">{transfer.date}</span>
+                  <span className="ds-secondary text-sm">•</span>
+                  <span className="ds-secondary text-sm">{transfer.league}</span>
                 </div>
                 
-                <h3 className="text-xl font-bold text-white mb-2">{transfer.player}</h3>
-                <p className="text-gray-300 mb-3">{transfer.description}</p>
+                <h3 className="text-xl font-bold mb-2">{transfer.player}</h3>
+                <p className="ds-secondary mb-3">{transfer.description}</p>
                 
                 <div className="flex items-center space-x-4 text-sm">
-                  <span className="text-gray-400">
+                  <span className="ds-secondary">
                     From: <span className="text-white">{transfer.from}</span>
                   </span>
-                  <span className="text-gray-400">→</span>
-                  <span className="text-gray-400">
+                  <span className="ds-secondary">→</span>
+                  <span className="ds-secondary">
                     To: <span className="text-white">{transfer.to}</span>
                   </span>
                 </div>
@@ -290,8 +282,8 @@ function TransferNews() {
       </div>
 
       {/* Transfer Statistics */}
-      <div className="glass rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Transfer Window Statistics</h3>
+      <div className="ds-card rounded-xl p-6">
+        <h3 className="text-lg font-semibold mb-4">Transfer Window Statistics</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
             <div className="text-3xl font-bold text-green-400 mb-2">
@@ -318,11 +310,11 @@ function TransferNews() {
       </div>
 
       {/* Transfer Tips */}
-      <div className="glass rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">💡 Transfer Window Tips</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-300">
+      <div className="ds-card rounded-xl p-6">
+        <h3 className="text-lg font-semibold mb-4">💡 Transfer Window Tips</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm ds-secondary">
           <div>
-            <h4 className="font-semibold text-white mb-2">For Clubs:</h4>
+            <h4 className="font-semibold mb-2">For Clubs:</h4>
             <ul className="space-y-1">
               <li>• Plan transfers early in the window</li>
               <li>• Consider both short-term and long-term needs</li>
@@ -331,7 +323,7 @@ function TransferNews() {
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold text-white mb-2">For Fans:</h4>
+            <h4 className="font-semibold mb-2">For Fans:</h4>
             <ul className="space-y-1">
               <li>• Follow reliable transfer sources</li>
               <li>• Don't believe every rumor</li>

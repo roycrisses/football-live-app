@@ -41,7 +41,7 @@ function Navigation() {
   ];
 
   return (
-    <nav className="bg-white/95 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+    <nav className="ds-navbar backdrop-blur-md sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -55,13 +55,13 @@ function Navigation() {
           {/* Search Bar */}
           <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
             <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 ds-secondary w-5 h-5" />
               <input
                 type="text"
                 placeholder="Search sports, teams, players..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                className="ds-input w-full pl-10 pr-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--ds-accent-blue)] focus:border-transparent transition-all duration-200"
               />
             </div>
           </div>
@@ -113,8 +113,8 @@ function Navigation() {
         </div>
 
         {/* Sports Filter Bar */}
-        <div className="hidden md:flex items-center space-x-4 py-3 border-t border-gray-100">
-          <span className="text-sm font-medium text-gray-500">Sports:</span>
+        <div className="hidden md:flex items-center space-x-4 py-3 border-t" style={{borderColor: 'var(--ds-border)'}}>
+          <span className="text-sm font-medium ds-secondary">Sports:</span>
           <div className="flex space-x-2">
             {sports.map((sport) => {
               const Icon = sport.icon;
@@ -124,13 +124,11 @@ function Navigation() {
                   key={sport.id}
                   onClick={() => setSelectedSport(sport.id)}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-1 ${
-                    isSelected 
-                      ? 'bg-gradient-to-r ' + sport.color + ' text-white shadow-md'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    isSelected ? 'ds-chip-active' : 'ds-chip hover:border-[var(--ds-border-light)]'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
-                  <span>{sport.name}</span>
+                  <span className="ds-secondary">{sport.name}</span>
                 </button>
               );
             })}
@@ -393,20 +391,20 @@ function HomePage() {
   return (
     <div className="space-y-8">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-8 text-white">
+      <div className="ds-card-elev rounded-2xl p-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4" style={{color:'var(--ds-text)'}}>
             Live Sports Hub
           </h1>
-          <p className="text-xl md:text-2xl mb-8 text-blue-100">
+          <p className="text-xl md:text-2xl mb-8 ds-secondary">
             Your ultimate destination for live matches, news, and statistics across all sports
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <button className="bg-white text-blue-600 px-8 py-3 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-200 flex items-center space-x-2">
+            <button className="ds-btn-primary px-8 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center space-x-2">
               <Play className="w-5 h-5" />
               <span>Watch Live</span>
             </button>
-            <button className="border-2 border-white text-white px-8 py-3 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all duration-200 flex items-center space-x-2">
+            <button className="ds-btn-outline px-8 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center space-x-2">
               <Newspaper className="w-5 h-5" />
               <span>Latest News</span>
             </button>
@@ -424,11 +422,11 @@ function HomePage() {
       {/* Live Matches Section */}
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-900 flex items-center space-x-2">
-            <Clock className="w-6 h-6 text-red-500" />
-            <span>Live Matches</span>
+          <h2 className="text-2xl font-bold flex items-center space-x-2">
+            <Clock className="w-6 h-6" />
+            <span style={{color:'var(--ds-text)'}}>Live Matches</span>
           </h2>
-          <Link to="/live-matches" className="text-blue-600 hover:text-blue-700 font-medium flex items-center space-x-1">
+          <Link to="/live-matches" className="font-medium flex items-center space-x-1 ds-secondary hover:opacity-80">
             <span>View All</span>
             <ChevronRight className="w-4 h-4" />
           </Link>
@@ -450,32 +448,32 @@ function HomePage() {
               ? featuredMatches 
               : featuredMatches.filter(m => m.sport === selectedSport)
             ).map((match) => (
-              <div key={match.id} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
+              <div key={match.id} className="ds-card rounded-xl p-6 hover:shadow-md transition-all duration-200">
                 <div className="flex items-center justify-between mb-4">
-                  <div className={`p-2 rounded-lg bg-gradient-to-r ${getSportColor(match.sport)}`}>
+                  <div className={`p-2 rounded-lg`} style={{background:'var(--ds-surface-elev)'}}>
                     {getSportIcon(match.sport)}
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                    <span className="text-xs px-2 py-1 rounded-full font-medium" style={{background:'var(--ds-accent-green)', color:'#000'}}>
                       {match.status}
                     </span>
-                    <span className="text-gray-500 text-sm">{match.minute}'</span>
+                    <span className="ds-secondary text-sm">{match.minute}'</span>
                   </div>
                 </div>
                 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-gray-900">{match.homeTeam}</span>
-                    <span className="text-2xl font-bold text-gray-900">{match.homeScore}</span>
+                    <span className="font-semibold">{match.homeTeam}</span>
+                    <span className="text-2xl font-bold">{match.homeScore}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-gray-900">{match.awayTeam}</span>
-                    <span className="text-2xl font-bold text-gray-900">{match.awayScore}</span>
+                    <span className="font-semibold">{match.awayTeam}</span>
+                    <span className="text-2xl font-bold">{match.awayScore}</span>
                   </div>
                 </div>
                 
                 <div className="mt-4 pt-4 border-t border-gray-100">
-                  <p className="text-sm text-gray-500">{match.league}</p>
+                  <p className="text-sm ds-secondary">{match.league}</p>
                 </div>
               </div>
             ))}
@@ -486,15 +484,15 @@ function HomePage() {
       {/* Trending Topics Section */}
       <div className="space-y-6">
         <h2 className="text-2xl font-bold text-gray-900 flex items-center space-x-2">
-          <TrendingUp className="w-6 h-6 text-green-500" />
-          <span>Trending Topics</span>
+          <TrendingUp className="w-6 h-6" />
+          <span style={{color:'var(--ds-text)'}}>Trending Topics</span>
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {trendingTopics.map((topic) => (
-            <div key={topic.id} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
+            <div key={topic.id} className="ds-card rounded-xl p-6 hover:shadow-md transition-all duration-200">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-gray-900">{topic.topic}</h3>
+                <h3 className="font-semibold">{topic.topic}</h3>
                 <div className={`flex items-center space-x-1 ${
                   topic.change === 'up' ? 'text-green-500' : 'text-red-500'
                 }`}>
@@ -505,11 +503,12 @@ function HomePage() {
               <div className="flex items-center space-x-2">
                 <div className="flex-1 bg-gray-200 rounded-full h-2">
                   <div 
-                    className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300"
+                    className="h-2 rounded-full transition-all duration-300"
+                    style={{ background: 'linear-gradient(90deg, var(--ds-accent-blue), var(--ds-accent-yellow))' }}
                     style={{ width: `${topic.trend}%` }}
                   ></div>
                 </div>
-                <span className="text-sm font-medium text-gray-600">{topic.trend}</span>
+                <span className="text-sm font-medium ds-secondary">{topic.trend}</span>
               </div>
             </div>
           ))}
@@ -518,22 +517,22 @@ function HomePage() {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Link to="/news" className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-6 text-white hover:shadow-lg transition-all duration-200">
+        <Link to="/news" className="ds-card-elev rounded-xl p-6 hover:shadow-lg transition-all duration-200">
           <Newspaper className="w-8 h-8 mb-4" />
           <h3 className="text-xl font-semibold mb-2">Latest News</h3>
-          <p className="text-blue-100">Stay updated with breaking sports news and analysis</p>
+          <p className="ds-secondary">Stay updated with breaking sports news and analysis</p>
         </Link>
         
-        <Link to="/statistics" className="bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-6 text-white hover:shadow-lg transition-all duration-200">
+        <Link to="/statistics" className="ds-card-elev rounded-xl p-6 hover:shadow-lg transition-all duration-200">
           <BarChart3 className="w-8 h-8 mb-4" />
           <h3 className="text-xl font-semibold mb-2">Statistics</h3>
-          <p className="text-green-100">Detailed stats and analytics for all sports</p>
+          <p className="ds-secondary">Detailed stats and analytics for all sports</p>
         </Link>
         
-        <Link to="/league-tables" className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-6 text-white hover:shadow-lg transition-all duration-200">
+        <Link to="/league-tables" className="ds-card-elev rounded-xl p-6 hover:shadow-lg transition-all duration-200">
           <Table className="w-8 h-8 mb-4" />
           <h3 className="text-xl font-semibold mb-2">League Tables</h3>
-          <p className="text-purple-100">Current standings and rankings</p>
+          <p className="ds-secondary">Current standings and rankings</p>
         </Link>
       </div>
 
@@ -767,17 +766,17 @@ function LiveMatchesPage() {
     <div className="space-y-8">
       {/* Page Header */}
       <div className="text-center py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
+        <h1 className="text-3xl font-bold mb-4">
           ⚡ Live Matches
         </h1>
-        <p className="text-gray-600">
+        <p className="ds-secondary">
           Real-time live matches from ESPN API across all sports
         </p>
       </div>
 
       {/* Sport Filter */}
       <div className="flex justify-center mb-8">
-        <div className="flex space-x-2 bg-gray-100 rounded-xl p-1">
+        <div className="flex space-x-2 ds-card-elev rounded-xl p-1">
           {sports.map((sport) => {
             const Icon = sport.icon;
             const effective = localSelectedSport !== 'all' ? localSelectedSport : selectedSport;
@@ -787,9 +786,7 @@ function LiveMatchesPage() {
                 key={sport.id}
                 onClick={() => setLocalSelectedSport(sport.id)}
                 className={`px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2 ${
-                  isSelected
-                    ? 'bg-white text-blue-600 shadow-md'
-                    : 'text-gray-600 hover:text-gray-900'
+                  isSelected ? 'ds-chip-active' : 'ds-chip'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -807,7 +804,7 @@ function LiveMatchesPage() {
         <button 
           onClick={fetchLiveMatches}
           disabled={loading}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold transition-colors disabled:opacity-50 flex items-center space-x-2"
+          className="ds-btn-primary px-6 py-3 rounded-xl font-semibold transition-colors disabled:opacity-50 flex items-center space-x-2"
         >
           {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : <RefreshCw className="w-5 h-5" />}
           <span>{loading ? 'Loading...' : '🔄 Refresh Live Matches'}</span>
@@ -828,7 +825,7 @@ function LiveMatchesPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {matches.map((match) => (
-            <div key={match.id} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200">
+            <div key={match.id} className="ds-card rounded-xl p-6 hover:shadow-lg transition-all duration-200">
               <div className="flex items-center justify-between mb-4">
                 <div className={`p-2 rounded-lg bg-gradient-to-r ${getSportColor(match.sport)}`}>
                   {getSportIcon(match.sport)}
@@ -837,7 +834,7 @@ function LiveMatchesPage() {
                   <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium">
                     {match.status}
                   </span>
-                  <span className="text-gray-500 text-sm">{match.minute}'</span>
+                  <span className="ds-secondary text-sm">{match.minute}'</span>
                 </div>
               </div>
               
@@ -852,8 +849,8 @@ function LiveMatchesPage() {
                 </div>
               </div>
               
-              <div className="space-y-2 pt-4 border-t border-gray-100">
-                <p className="text-sm text-gray-500">{match.league}</p>
+              <div className="space-y-2 pt-4 border-t" style={{borderColor: 'var(--ds-border)'}}>
+                <p className="text-sm ds-secondary">{match.league}</p>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-600">Trending:</span>
                   <span className="font-medium text-green-600">{match.trendingScore}%</span>
@@ -1025,17 +1022,17 @@ function NewsPage() {
     <div className="space-y-8">
       {/* Page Header */}
       <div className="text-center py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
+        <h1 className="text-3xl font-bold mb-4">
           📰 Latest Sports News
                 </h1>
-        <p className="text-gray-600">
+        <p className="ds-secondary">
           Stay updated with breaking news, analysis, and insights from the sports world
                 </p>
         <div className="mt-4">
             <button
             onClick={fetchSportsNews}
               disabled={loading}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold transition-colors disabled:opacity-50 flex items-center space-x-2 mx-auto"
+            className="ds-btn-primary px-6 py-3 rounded-xl font-semibold transition-colors disabled:opacity-50 flex items-center space-x-2 mx-auto"
             >
             {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : <RefreshCw className="w-5 h-5" />}
             <span>{loading ? 'Loading...' : '🔄 Refresh News'}</span>
@@ -1068,7 +1065,7 @@ function NewsPage() {
 
       {/* Featured Article */}
       {!loading && articles.length > 0 && (
-        <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-200">
+        <div className="ds-card rounded-xl p-8 shadow-sm">
           <div className="flex items-center space-x-2 mb-4">
             <span className="bg-red-500 text-white text-xs px-3 py-1 rounded-full font-medium">BREAKING</span>
             <span className="text-gray-500 text-sm">{articles[0].category}</span>
@@ -1077,9 +1074,9 @@ function NewsPage() {
             <span className="text-gray-500 text-sm">•</span>
             <span className="text-gray-500 text-sm">{articles[0].readTime}</span>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">{articles[0].title}</h2>
-          <p className="text-gray-600 text-lg mb-6 leading-relaxed">{articles[0].excerpt}</p>
-          <button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-xl font-semibold transition-colors flex items-center space-x-2">
+          <h2 className="text-3xl font-bold mb-4">{articles[0].title}</h2>
+          <p className="ds-secondary text-lg mb-6 leading-relaxed">{articles[0].excerpt}</p>
+          <button className="ds-btn-outline px-8 py-3 rounded-xl font-semibold transition-colors flex items-center space-x-2">
             <Eye className="w-5 h-5" />
             <span>Read Full Article</span>
           </button>
@@ -1090,12 +1087,12 @@ function NewsPage() {
       {!loading && articles.length > 1 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.slice(1).map((article) => (
-            <div key={article.id} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200">
+            <div key={article.id} className="ds-card rounded-xl p-6 hover:shadow-lg transition-all duration-200">
               <div className="flex items-center space-x-2 mb-4">
                 <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full font-medium">{article.category}</span>
-                <span className="text-gray-500 text-sm">{article.date}</span>
-                <span className="text-gray-500 text-sm">•</span>
-                <span className="text-gray-500 text-sm">{article.readTime}</span>
+                <span className="ds-secondary text-sm">{article.date}</span>
+                <span className="ds-secondary text-sm">•</span>
+                <span className="ds-secondary text-sm">{article.readTime}</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">{article.title}</h3>
               <p className="text-gray-600 mb-4 line-clamp-3">{article.excerpt}</p>
@@ -1151,10 +1148,10 @@ function StatisticsPage() {
     <div className="space-y-8">
       {/* Page Header */}
       <div className="text-center py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
+        <h1 className="text-3xl font-bold mb-4">
           📊 Sports Statistics
         </h1>
-        <p className="text-gray-600">
+        <p className="ds-secondary">
           Real-time statistics and analytics powered by ESPN API
         </p>
 
@@ -1178,7 +1175,7 @@ function StatisticsPage() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {stats.topScorers.map((player, index) => (
-            <div key={player.name} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
+            <div key={player.name} className="ds-card rounded-xl p-6 hover:shadow-md transition-all duration-200">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-3">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
@@ -1204,37 +1201,37 @@ function StatisticsPage() {
               <div className="space-y-2">
                 {player.goals && (
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Goals:</span>
+                    <span className="ds-secondary">Goals:</span>
                     <span className="font-semibold text-gray-900">{player.goals}</span>
                   </div>
                 )}
                 {player.assists && (
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Assists:</span>
+                    <span className="ds-secondary">Assists:</span>
                     <span className="font-semibold text-gray-900">{player.assists}</span>
                   </div>
                 )}
                 {player.points && (
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Points:</span>
+                    <span className="ds-secondary">Points:</span>
                     <span className="font-semibold text-gray-900">{player.points}</span>
                 </div>
                 )}
                 {player.rebounds && (
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Rebounds:</span>
+                    <span className="ds-secondary">Rebounds:</span>
                     <span className="font-semibold text-gray-900">{player.rebounds}</span>
                 </div>
                 )}
                 {player.wins && (
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Wins:</span>
+                    <span className="ds-secondary">Wins:</span>
                     <span className="font-semibold text-gray-900">{player.wins}</span>
                   </div>
                 )}
                 {player.titles && (
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Titles:</span>
+                    <span className="ds-secondary">Titles:</span>
                     <span className="font-semibold text-gray-900">{player.titles}</span>
                   </div>
                 )}
@@ -1246,22 +1243,22 @@ function StatisticsPage() {
 
       {/* Team Statistics Section */}
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold text-gray-900 flex items-center space-x-2">
+        <h2 className="text-2xl font-bold flex items-center space-x-2">
           <Users2 className="w-6 h-6 text-blue-500" />
-          <span>Team Performance</span>
+          <span style={{color:'var(--ds-text)'}}>Team Performance</span>
         </h2>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+        <div className="ds-card rounded-xl p-6 shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-200">
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900">Team</th>
-                  <th className="text-center py-3 px-4 font-semibold text-gray-900">Wins</th>
-                  <th className="text-center py-3 px-4 font-semibold text-gray-900">Draws</th>
-                  <th className="text-center py-3 px-4 font-semibold text-gray-900">Losses</th>
-                  <th className="text-center py-3 px-4 font-semibold text-gray-900">Points/Win Rate</th>
-                  <th className="text-center py-3 px-4 font-semibold text-gray-900">Sport</th>
+                  <th className="text-left py-3 px-4 font-semibold">Team</th>
+                  <th className="text-center py-3 px-4 font-semibold">Wins</th>
+                  <th className="text-center py-3 px-4 font-semibold">Draws</th>
+                  <th className="text-center py-3 px-4 font-semibold">Losses</th>
+                  <th className="text-center py-3 px-4 font-semibold">Points/Win Rate</th>
+                  <th className="text-center py-3 px-4 font-semibold">Sport</th>
                 </tr>
               </thead>
               <tbody>

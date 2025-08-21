@@ -196,17 +196,17 @@ function LeagueTable() {
     <div className="space-y-8">
       {/* Page Header */}
       <div className="text-center py-8">
-        <h1 className="text-3xl font-bold text-white mb-4">
+        <h1 className="text-3xl font-bold mb-4">
           🏆 League Tables
         </h1>
-        <p className="text-gray-300">
+        <p className="ds-secondary">
           Real-time standings from RapidAPI ESPN API
         </p>
         <div className="mt-4">
           <button 
             onClick={() => fetchLeagueStandings(leagues[selectedLeague]?.id)}
             disabled={loading}
-            className="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg font-semibold transition-colors disabled:opacity-50 flex items-center mx-auto"
+            className="ds-btn-primary px-6 py-2 rounded-lg font-semibold transition-colors disabled:opacity-50 flex items-center mx-auto"
           >
             {loading ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
             {loading ? 'Loading...' : '🔄 Refresh Data'}
@@ -224,15 +224,13 @@ function LeagueTable() {
 
       {/* League Selector */}
       <div className="flex justify-center mb-8">
-        <div className="flex space-x-2 bg-white/10 rounded-lg p-1">
+        <div className="flex space-x-2 ds-card-elev rounded-lg p-1">
           {Object.keys(leagues).map((league) => (
             <button
               key={league}
               onClick={() => setSelectedLeague(league)}
               className={`px-4 py-2 rounded-md transition-colors ${
-                selectedLeague === league
-                  ? 'bg-yellow-500 text-black'
-                  : 'text-white hover:bg-white/10'
+                selectedLeague === league ? 'ds-chip-active' : 'ds-chip'
               }`}
             >
               {league}
@@ -242,11 +240,11 @@ function LeagueTable() {
       </div>
 
       {/* League Table */}
-      <div className="glass rounded-xl p-6 overflow-x-auto">
-        <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-          <Trophy className="w-6 h-6 mr-2 text-yellow-400" />
+      <div className="ds-card rounded-xl p-6 overflow-x-auto">
+        <h2 className="text-2xl font-bold mb-6 flex items-center">
+          <Trophy className="w-6 h-6 mr-2" />
           {selectedLeague} Table
-          {loading && <RefreshCw className="w-5 h-5 ml-2 animate-spin text-yellow-400" />}
+          {loading && <RefreshCw className="w-5 h-5 ml-2 animate-spin" />}
         </h2>
         
         {loading ? (
@@ -257,18 +255,18 @@ function LeagueTable() {
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/20">
-                <th className="text-left py-3 px-2 text-gray-300 font-medium">Pos</th>
-                <th className="text-left py-3 px-2 text-gray-300 font-medium">Team</th>
-                <th className="text-center py-3 px-2 text-gray-300 font-medium">P</th>
-                <th className="text-center py-3 px-2 text-gray-300 font-medium">W</th>
-                <th className="text-center py-3 px-2 text-gray-300 font-medium">D</th>
-                <th className="text-center py-3 px-2 text-gray-300 font-medium">L</th>
-                <th className="text-center py-3 px-2 text-gray-300 font-medium">GF</th>
-                <th className="text-center py-3 px-2 text-gray-300 font-medium">GA</th>
-                <th className="text-center py-3 px-2 text-gray-300 font-medium">GD</th>
-                <th className="text-center py-3 px-2 text-gray-300 font-medium">Pts</th>
-                <th className="text-center py-3 px-2 text-gray-300 font-medium">Form</th>
+              <tr className="border-b" style={{borderColor:'var(--ds-border)'}}>
+                <th className="text-left py-3 px-2 ds-secondary font-medium">Pos</th>
+                <th className="text-left py-3 px-2 ds-secondary font-medium">Team</th>
+                <th className="text-center py-3 px-2 ds-secondary font-medium">P</th>
+                <th className="text-center py-3 px-2 ds-secondary font-medium">W</th>
+                <th className="text-center py-3 px-2 ds-secondary font-medium">D</th>
+                <th className="text-center py-3 px-2 ds-secondary font-medium">L</th>
+                <th className="text-center py-3 px-2 ds-secondary font-medium">GF</th>
+                <th className="text-center py-3 px-2 ds-secondary font-medium">GA</th>
+                <th className="text-center py-3 px-2 ds-secondary font-medium">GD</th>
+                <th className="text-center py-3 px-2 ds-secondary font-medium">Pts</th>
+                <th className="text-center py-3 px-2 ds-secondary font-medium">Form</th>
               </tr>
             </thead>
             <tbody>

@@ -1,0 +1,405 @@
+{
+  "designSystem": {
+    "name": "Protech Store Design System",
+    "version": "1.0.0",
+    "description": "Dark theme e-commerce design system with modern UI components",
+    
+    "colorPalette": {
+      "primary": {
+        "background": "#0A0A0A",
+        "surface": "#1A1A1A",
+        "surfaceElevated": "#2A2A2A",
+        "border": "#333333",
+        "borderLight": "#404040"
+      },
+      "accent": {
+        "yellow": "#F4D03F",
+        "green": "#2ECC71",
+        "blue": "#3498DB"
+      },
+      "text": {
+        "primary": "#FFFFFF",
+        "secondary": "#CCCCCC",
+        "muted": "#999999",
+        "disabled": "#666666"
+      },
+      "semantic": {
+        "success": "#2ECC71",
+        "warning": "#F39C12",
+        "error": "#E74C3C",
+        "info": "#3498DB"
+      }
+    },
+    
+    "typography": {
+      "fontFamily": {
+        "primary": "system-ui, -apple-system, sans-serif",
+        "mono": "Monaco, Consolas, monospace"
+      },
+      "fontSizes": {
+        "xs": "12px",
+        "sm": "14px",
+        "base": "16px",
+        "lg": "18px",
+        "xl": "20px",
+        "2xl": "24px",
+        "3xl": "32px",
+        "4xl": "48px"
+      },
+      "fontWeights": {
+        "light": 300,
+        "normal": 400,
+        "medium": 500,
+        "semibold": 600,
+        "bold": 700
+      },
+      "lineHeights": {
+        "tight": 1.2,
+        "normal": 1.5,
+        "relaxed": 1.6
+      }
+    },
+    
+    "spacing": {
+      "xs": "4px",
+      "sm": "8px",
+      "md": "16px",
+      "lg": "24px",
+      "xl": "32px",
+      "2xl": "48px",
+      "3xl": "64px"
+    },
+    
+    "borderRadius": {
+      "none": "0px",
+      "sm": "4px",
+      "md": "8px",
+      "lg": "12px",
+      "xl": "16px",
+      "full": "9999px"
+    },
+    
+    "shadows": {
+      "none": "none",
+      "sm": "0 1px 2px rgba(0, 0, 0, 0.3)",
+      "md": "0 4px 6px rgba(0, 0, 0, 0.3)",
+      "lg": "0 10px 15px rgba(0, 0, 0, 0.4)",
+      "xl": "0 20px 25px rgba(0, 0, 0, 0.5)"
+    },
+    
+    "layout": {
+      "header": {
+        "height": "64px",
+        "background": "surface",
+        "borderBottom": "1px solid border",
+        "padding": "0 24px",
+        "zIndex": 100
+      },
+      "sidebar": {
+        "width": "280px",
+        "background": "surface",
+        "borderRight": "1px solid border",
+        "padding": "24px"
+      },
+      "main": {
+        "background": "background",
+        "padding": "24px",
+        "minHeight": "calc(100vh - 64px)"
+      },
+      "container": {
+        "maxWidth": "1200px",
+        "margin": "0 auto",
+        "padding": "0 24px"
+      }
+    },
+    
+    "components": {
+      "navigationHeader": {
+        "structure": "horizontal flex container",
+        "elements": {
+          "logo": {
+            "position": "left",
+            "fontSize": "xl",
+            "fontWeight": "bold",
+            "color": "text.primary"
+          },
+          "navigation": {
+            "position": "center-left",
+            "display": "horizontal tabs",
+            "spacing": "lg",
+            "activeIndicator": "underline",
+            "activeColor": "accent.yellow"
+          },
+          "actions": {
+            "position": "right",
+            "elements": ["search", "cart", "profile"],
+            "spacing": "md"
+          }
+        },
+        "styles": {
+          "background": "surface",
+          "height": "64px",
+          "padding": "0 24px",
+          "borderBottom": "1px solid border"
+        }
+      },
+      
+      "breadcrumb": {
+        "structure": "horizontal path",
+        "separator": "→",
+        "textColor": "text.muted",
+        "fontSize": "sm",
+        "spacing": "sm"
+      },
+      
+      "sectionHeader": {
+        "structure": "flex justify-between align-center",
+        "title": {
+          "fontSize": "3xl",
+          "fontWeight": "bold",
+          "color": "text.primary"
+        },
+        "navigation": {
+          "display": "horizontal tabs",
+          "underlineActive": true,
+          "activeColor": "accent.yellow"
+        },
+        "controls": {
+          "position": "right",
+          "elements": ["sort", "filter"],
+          "buttonStyle": "outline"
+        }
+      },
+      
+      "filterSidebar": {
+        "structure": "vertical stack",
+        "background": "surface",
+        "padding": "lg",
+        "borderRadius": "lg",
+        "sections": {
+          "activeFilters": {
+            "display": "chip list",
+            "chipStyle": "removable tags",
+            "spacing": "sm"
+          },
+          "filterGroups": {
+            "structure": "collapsible sections",
+            "headerStyle": "expandable",
+            "contentSpacing": "md"
+          }
+        }
+      },
+      
+      "productCard": {
+        "structure": "vertical card layout",
+        "dimensions": "fixed aspect ratio",
+        "elements": {
+          "badge": {
+            "position": "top-left overlay",
+            "background": "accent.yellow",
+            "color": "background",
+            "fontSize": "xs",
+            "fontWeight": "bold",
+            "padding": "xs sm",
+            "borderRadius": "sm"
+          },
+          "favoriteButton": {
+            "position": "top-right overlay",
+            "style": "heart icon",
+            "states": ["inactive", "active"]
+          },
+          "imageArea": {
+            "aspectRatio": "1:1",
+            "background": "surfaceElevated",
+            "borderRadius": "lg",
+            "overflow": "hidden"
+          },
+          "content": {
+            "padding": "md",
+            "spacing": "sm",
+            "elements": {
+              "brand": {
+                "fontSize": "sm",
+                "color": "text.secondary",
+                "fontWeight": "medium"
+              },
+              "rating": {
+                "display": "star rating",
+                "color": "accent.yellow",
+                "fontSize": "sm"
+              },
+              "price": {
+                "fontSize": "lg",
+                "fontWeight": "bold",
+                "color": "text.primary"
+              },
+              "originalPrice": {
+                "fontSize": "sm",
+                "color": "text.muted",
+                "textDecoration": "strikethrough"
+              },
+              "title": {
+                "fontSize": "base",
+                "color": "text.primary",
+                "lineHeight": "normal"
+              }
+            }
+          }
+        },
+        "styles": {
+          "background": "surface",
+          "borderRadius": "lg",
+          "padding": "md",
+          "transition": "hover elevation",
+          "hoverShadow": "lg"
+        }
+      },
+      
+      "productGrid": {
+        "structure": "responsive grid",
+        "gridCols": {
+          "mobile": 1,
+          "tablet": 2,
+          "desktop": 3,
+          "wide": 4
+        },
+        "gap": "lg",
+        "itemSpacing": "md"
+      },
+      
+      "button": {
+        "variants": {
+          "primary": {
+            "background": "accent.yellow",
+            "color": "background",
+            "fontWeight": "semibold"
+          },
+          "secondary": {
+            "background": "surface",
+            "color": "text.primary",
+            "border": "1px solid border"
+          },
+          "ghost": {
+            "background": "transparent",
+            "color": "text.primary"
+          },
+          "outline": {
+            "background": "transparent",
+            "color": "text.primary",
+            "border": "1px solid border"
+          }
+        },
+        "sizes": {
+          "sm": {
+            "padding": "xs sm",
+            "fontSize": "sm"
+          },
+          "md": {
+            "padding": "sm md",
+            "fontSize": "base"
+          },
+          "lg": {
+            "padding": "md lg",
+            "fontSize": "lg"
+          }
+        },
+        "states": {
+          "hover": "opacity: 0.8",
+          "active": "scale: 0.95",
+          "disabled": "opacity: 0.5, cursor: not-allowed"
+        }
+      },
+      
+      "input": {
+        "structure": "form field",
+        "background": "surfaceElevated",
+        "border": "1px solid border",
+        "borderRadius": "md",
+        "padding": "sm md",
+        "fontSize": "base",
+        "color": "text.primary",
+        "placeholder": "text.muted",
+        "focusStyles": {
+          "borderColor": "accent.blue",
+          "outline": "none",
+          "boxShadow": "0 0 0 2px rgba(52, 152, 219, 0.2)"
+        }
+      },
+      
+      "chip": {
+        "structure": "inline element",
+        "background": "surfaceElevated",
+        "color": "text.primary",
+        "padding": "xs sm",
+        "borderRadius": "full",
+        "fontSize": "sm",
+        "removable": {
+          "closeIcon": "×",
+          "closeIconSize": "sm",
+          "closeIconColor": "text.muted"
+        }
+      },
+      
+      "icon": {
+        "sizes": {
+          "xs": "12px",
+          "sm": "16px",
+          "md": "20px",
+          "lg": "24px",
+          "xl": "32px"
+        },
+        "colors": {
+          "default": "text.primary",
+          "muted": "text.muted",
+          "accent": "accent.yellow"
+        }
+      }
+    },
+    
+    "interactions": {
+      "hover": {
+        "productCard": "elevation increase, subtle scale",
+        "button": "opacity change, color transition",
+        "navigation": "underline animation"
+      },
+      "active": {
+        "button": "scale down slightly",
+        "tab": "underline indicator"
+      },
+      "focus": {
+        "input": "border color change, glow effect",
+        "button": "outline ring"
+      }
+    },
+    
+    "animations": {
+      "duration": {
+        "fast": "150ms",
+        "normal": "250ms",
+        "slow": "500ms"
+      },
+      "easing": {
+        "ease": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "easeIn": "cubic-bezier(0.4, 0, 1, 1)",
+        "easeOut": "cubic-bezier(0, 0, 0.2, 1)"
+      }
+    },
+    
+    "breakpoints": {
+      "mobile": "320px",
+      "tablet": "768px",
+      "desktop": "1024px",
+      "wide": "1280px",
+      "ultra": "1536px"
+    },
+    
+    "designPrinciples": {
+      "darkFirst": "Design primarily for dark theme with high contrast",
+      "minimalism": "Clean, uncluttered interfaces with plenty of whitespace",
+      "consistency": "Reusable components with consistent spacing and styling",
+      "accessibility": "High contrast ratios and clear visual hierarchy",
+      "responsiveness": "Mobile-first responsive design with fluid layouts",
+      "modernInteractions": "Subtle animations and hover states for better UX"
+    }
+  }
+}
